@@ -100,7 +100,6 @@ function App() {
             {/* </WalletProvider> */}
           </ThemeProvider>
         </EthConnectionProvider>
-
       </RainbowKitProvider>
     </ZustandProvider>
   );
