@@ -5,8 +5,8 @@ import { Trending24hCollectionsCarousel } from "../componentsV3/collections/Tren
 import { NewCollectionsCarousel } from "../componentsV3/collections/NewCollectionsCarousel";
 import { UpcomingCollectionsCarousel } from "../componentsV3/collections/UpcomingCollectionsCarousel";
 import { CategoriesGrid } from "../componentsV3/categories/CategoriesGrid";
-// import {StakeToEarnBanner} from "../componentsV3/staking/StakeToEarnBanner";
-// import {TrendingGrid} from "../componentsV3/collections/TrendingGrid";
+import { StakeToEarnBanner } from "../componentsV3/staking/StakeToEarnBanner";
+import { TrendingGrid } from "../componentsV3/collections/TrendingGrid";
 
 export function Index() {
   return (
@@ -17,8 +17,8 @@ export function Index() {
         <NewCollectionsCarousel />
         <UpcomingCollectionsCarousel />
         <CategoriesGrid />
-        {/*<StakeToEarnBanner/>
-        <TrendingGrid/> */}
+        <StakeToEarnBanner />
+        <TrendingGrid />
       </div>
     </Layout>
   );

@@ -6,6 +6,7 @@ import { TrendingCollectionData } from "../../data/collection";
 // } from "../../api/api";
 import { useStore } from "../../lib/store";
 import MoonkeesNft from "../../assets/nfts/moonkes.png";
+import ArrowDown from "../../assets/icons/arrow-down.svg";
 
 const listTrendingCollections = [
   {
@@ -120,7 +121,7 @@ export function TrendingGrid() {
               {(trendingListPeriodMapping as any)[trendingListPeriod]}{" "}
               <img
                 alt="arrow-down"
-                src="/icons/arrow-down.svg"
+                src={ArrowDown}
                 width={12}
                 className={`ml-4 transition-all invert-icon ${
                   collectionTrendingGridIntervalDropdownOpen ? "rotate-180" : ""
