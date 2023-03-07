@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { StoreProvider } from "./api/store";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { NotificationOverlay } from "./components/notifications";
-import { ThemeProvider } from './lib/next-themes'
+import { ThemeProvider } from "./lib/next-themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
-import { useCreateStore, Provider as ZustandProvider } from './lib/store'
+import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
 
 import Explore from "./pages/explore";
@@ -21,24 +20,26 @@ import Submissions from "./pages/submissions";
 import SubmissionsUpsert from "./pages/submissions/[id]";
 
 import "./index.css";
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 function App() {
   // @ts-ignore
-  const createStore = useCreateStore({})
+  const createStore = useCreateStore({});
 
   return (
-    <StoreProvider>
-      <ZustandProvider createStore={createStore}>
-        <ThemeProvider defaultTheme='light' themes={['light', 'dark']} attribute='class'>
-          {/* <WalletProvider> */}
-          <Router>
-            <Routes>
-              <Route path="/explore">
+    <ZustandProvider createStore={createStore}>
+      <ThemeProvider
+        defaultTheme="light"
+        themes={["light", "dark"]}
+        attribute="class"
+      >
+        {/* <WalletProvider> */}
+        <Router>
+          <Routes>
+            {/* <Route path="/explore">
                 <Explore />
               </Route>
               <Route path="/faq">
@@ -70,17 +71,16 @@ function App() {
               </Route>
               <Route path="/submissions">
                 <Submissions />
-              </Route>
-              <Route path="/">
-                <Index />
-              </Route>
-            </Routes>
-          </Router>
-          <NotificationOverlay />
-          {/* </WalletProvider> */}
-        </ThemeProvider>
-      </ZustandProvider>
-    </StoreProvider>
+              </Route> */}
+            <Route path="/">
+              <Index />
+            </Route>
+          </Routes>
+        </Router>
+        <NotificationOverlay />
+        {/* </WalletProvider> */}
+      </ThemeProvider>
+    </ZustandProvider>
   );
 }
 

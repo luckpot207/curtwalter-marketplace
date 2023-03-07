@@ -1,11 +1,10 @@
 import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
-import { BiCheckCircle as CheckCircleIcon } from "react-icons/bi";
-import { BiX as XIcon, BiAlarmExclamation as ExclamationIcon } from "react-icons/bi";
-import { NotificationData } from "../api/types";
-import { useSelector } from "../api/store";
+import { BiCheck, BiX, BiAlarmExclamation } from "react-icons/bi";
+// import { NotificationData } from "../api/types";
+// import { useSelector } from "../api/store";
 
-function Notification(props: NotificationData) {
+function Notification(props: any) {
   const [show, setShow] = useState(true);
   return (
     <div className="w-full flex flex-col items-center space-y-4 sm:items-start mt-2">
@@ -25,12 +24,12 @@ function Notification(props: NotificationData) {
             <div className="flex items-start">
               <div className="flex-shrink-0">
                 {props.type === "error" ? (
-                  <ExclamationIcon
+                  <BiAlarmExclamation
                     className="h-6 w-6 text-red-400"
                     aria-hidden="true"
                   />
                 ) : (
-                  <CheckCircleIcon
+                  <BiCheck
                     className="h-6 w-6 text-green-400"
                     aria-hidden="true"
                   />
@@ -50,7 +49,7 @@ function Notification(props: NotificationData) {
                   }}
                 >
                   <span className="sr-only">Close</span>
-                  <XIcon className="h-5 w-5" aria-hidden="true" />
+                  <BiX className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -62,7 +61,7 @@ function Notification(props: NotificationData) {
 }
 
 export function NotificationOverlay() {
-  const notifications = useSelector((data) => data.notifications);
+  const notifications: any[] = []; //useSelector((data: any) => data.notifications);
 
   return (
     <>
@@ -71,7 +70,7 @@ export function NotificationOverlay() {
         aria-live="assertive"
         className="z-50 fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start flex-col-reverse"
       >
-        {notifications.map((n) => (
+        {notifications.map((n: any) => (
           <Notification key={n.id} {...n} />
         ))}
       </div>
