@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import { useCallback, useState } from "react";
-import { useIntersection } from "../../lib/next/client/use-intersection";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {useIntersection} from "../../lib/next/client/use-intersection";
 
 const loadedImageURLs = new Set<string>()
 
@@ -59,12 +59,12 @@ export function Img({ src, srcSet, alt, loading, resize, className, placeholder,
   return (
     <>
       <img
-        loading={loading || 'lazy'}
+        loading={ loading || 'lazy' }
         src={isVisible ? src : placeholderImgSrc}
         srcSet={isVisible ? src : srcSet}
         alt={alt}
         decoding="async"
-        style={{ ...blurStyle }}
+        style={{...blurStyle }}
         className={classNames(
           'w-full h-full object-center',
           {
@@ -123,7 +123,7 @@ function handleLoading(
   }
   img['data-loaded-src'] = src
   const p = 'decode' in img ? img.decode() : Promise.resolve()
-  p.catch(() => { }).then(() => {
+  p.catch(() => {}).then(() => {
     if (!img.parentNode) {
       // Exit early in case of race condition:
       // - onload() is called

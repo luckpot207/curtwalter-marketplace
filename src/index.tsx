@@ -7,18 +7,6 @@ import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
 
-import Explore from "./pages/explore";
-import FAQ from "./pages/faq";
-import Collection from "./pages/collection/[slug]";
-import CollectionActivity from "./pages/collection/[slug]/activity";
-import EditCollection from "./pages/collection/[slug]/edit";
-import Token from "./pages/t";
-import User from "./pages/user/[pubkey]";
-import Privacy from "./pages/privacy";
-import Stake from "./pages/stake";
-import Submissions from "./pages/submissions";
-import SubmissionsUpsert from "./pages/submissions/[id]";
-
 import "./index.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -72,9 +60,7 @@ function App() {
               <Route path="/submissions">
                 <Submissions />
               </Route> */}
-            <Route path="/">
-              <Index />
-            </Route>
+            <Route path="/" element={<Index />} />
           </Routes>
         </Router>
         <NotificationOverlay />

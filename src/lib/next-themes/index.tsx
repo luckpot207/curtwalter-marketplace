@@ -13,7 +13,7 @@ const colorSchemes = ['light', 'dark']
 const MEDIA = '(prefers-color-scheme: dark)'
 const isServer = typeof window === 'undefined'
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined)
-const defaultContext: UseThemeProps = { setTheme: _ => { }, themes: [] }
+const defaultContext: UseThemeProps = { setTheme: _ => {}, themes: [] }
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext
 
@@ -26,23 +26,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
 }
 
 const Theme: React.FC<ThemeProviderProps> = ({
-  forcedTheme,
-  disableTransitionOnChange = false,
-  enableSystem = true,
-  enableColorScheme = true,
-  storageKey = 'theme',
-  themes = ['light', 'dark'],
-  defaultTheme = enableSystem ? 'system' : 'light',
-  attribute = 'data-theme',
-  value,
-  children,
-  nonce
-}) => {
+                                               forcedTheme,
+                                               disableTransitionOnChange = false,
+                                               enableSystem = true,
+                                               enableColorScheme = true,
+                                               storageKey = 'theme',
+                                               themes = ['light', 'dark'],
+                                               defaultTheme = enableSystem ? 'system' : 'light',
+                                               attribute = 'data-theme',
+                                               value,
+                                               children,
+                                               nonce
+                                             }) => {
   const [theme, setThemeState] = useState(() => getTheme(storageKey, defaultTheme))
   const [resolvedTheme, setResolvedTheme] = useState(() => getTheme(storageKey))
   const attrs = !value ? themes : Object.values(value)
 
-  const applyTheme = useCallback((theme: string) => {
+  const applyTheme = useCallback((theme: any) => {
     let resolved = theme
     if (!resolved) return
 
@@ -78,7 +78,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   }, [])
 
   const setTheme = useCallback(
-    (theme: string) => {
+    (theme: any) => {
       setThemeState(theme)
 
       // Save to storage
@@ -132,7 +132,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
 
   // Whenever theme or forcedTheme changes, apply it
   useEffect(() => {
-    applyTheme(forcedTheme ?? theme ?? "")
+    applyTheme(forcedTheme ?? theme)
   }, [forcedTheme, theme])
 
   return (
@@ -169,16 +169,16 @@ const Theme: React.FC<ThemeProviderProps> = ({
 
 const ThemeScript = memo(
   ({
-    forcedTheme,
-    storageKey,
-    attribute,
-    enableSystem,
-    enableColorScheme,
-    defaultTheme,
-    value,
-    attrs,
-    nonce
-  }: ThemeProviderProps & { attrs: string[]; defaultTheme: string }) => {
+     forcedTheme,
+     storageKey,
+     attribute,
+     enableSystem,
+     enableColorScheme,
+     defaultTheme,
+     value,
+     attrs,
+     nonce
+   }: ThemeProviderProps & { attrs: string[]; defaultTheme: string }) => {
     const defaultSystem = defaultTheme === 'system'
 
     // Code-golfing the amount of characters in the script
@@ -241,17 +241,20 @@ const ThemeScript = memo(
       if (enableSystem) {
         return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if('system'===e||(!e&&${defaultSystem})){var t='${MEDIA}',m=window.matchMedia(t);if(m.media!==t||m.matches){${updateDOM(
           'dark'
-        )}}else{${updateDOM('light')}}}else if(e){${value ? `var x=${JSON.stringify(value)};` : ''
-          }${updateDOM(value ? `x[e]` : 'e', true)}}${!defaultSystem ? `else{` + updateDOM(defaultTheme, false, false) + '}' : ''
-          }${fallbackColorScheme}}catch(e){}}()`
+        )}}else{${updateDOM('light')}}}else if(e){${
+          value ? `var x=${JSON.stringify(value)};` : ''
+        }${updateDOM(value ? `x[e]` : 'e', true)}}${
+          !defaultSystem ? `else{` + updateDOM(defaultTheme, false, false) + '}' : ''
+        }${fallbackColorScheme}}catch(e){}}()`
       }
 
-      return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${value ? `var x=${JSON.stringify(value)};` : ''
-        }${updateDOM(value ? `x[e]` : 'e', true)}}else{${updateDOM(
-          defaultTheme,
-          false,
-          false
-        )};}${fallbackColorScheme}}catch(t){}}();`
+      return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
+        value ? `var x=${JSON.stringify(value)};` : ''
+      }${updateDOM(value ? `x[e]` : 'e', true)}}else{${updateDOM(
+        defaultTheme,
+        false,
+        false
+      )};}${fallbackColorScheme}}catch(t){}}();`
     })()
 
     return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: scriptSrc }} />
@@ -283,7 +286,7 @@ const disableAnimation = () => {
 
   return () => {
     // Force restyle
-    ; (() => window.getComputedStyle(document.body))()
+    ;(() => window.getComputedStyle(document.body))()
 
     // Wait for next tick before removing
     setTimeout(() => {

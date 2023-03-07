@@ -1,4 +1,5 @@
-import { Img } from "./Img";
+import React from "react";
+import {Img} from "./Img";
 
 export type PictureProps = {
   src: string

@@ -1,12 +1,10 @@
 import React, { Fragment, useState } from "react";
-import { useSelector } from "../../api/store";
-import { getTokenList } from "../../api/api";
 import { addNotification } from "../../utils/alert";
 import { useLocation, useParams } from "react-router-dom";
 
 import { Collection, TokenAPISimple } from "../../data/marketplace.pb";
-import { FakeSimpleTokenList } from "../../components/fakes/FakeSimpleTokenList";
-import AccountName from "../../components/accountName";
+// import { FakeSimpleTokenList } from "../../components/fakes/FakeSimpleTokenList";
+// import AccountName from "../../components/accountName";
 import {
   BiArrowToBottom as ArrowDownIcon,
   BiArrowFromBottom as ArrowUpIcon,
@@ -16,12 +14,12 @@ import {
   BiTrendingUp as TrendingUpIcon,
 } from "react-icons/bi";
 import { classNames } from "../../utils/clsx";
-import { TradingHistory } from "../../components/TradingHistory";
+// import { TradingHistory } from "../../components/TradingHistory";
 import { Listbox, Transition } from "@headlessui/react";
 import { Helmet } from "react-helmet";
 import { useAccounts } from "../../utils/useAccounts";
-import { TokenListing } from "../../user/TokenListing";
-import Profile from "../../user/Profile";
+// import { TokenListing } from "../../user/TokenListing";
+// import Profile from "../../user/Profile";
 import { Layout } from "../../componentsV3/layout/Layout";
 
 const comparePrices = (a: TokenAPISimple, b: TokenAPISimple) =>
@@ -32,8 +30,7 @@ type Tab = "nfts" | "offersReceived" | "offersMade" | "history" | "settings";
 const tabs = [
   {
     key: "nfts",
-    title: (isCurrentUser: boolean) =>
-      isCurrentUser ? "My Wallet" : "Wallet",
+    title: (isCurrentUser: boolean) => (isCurrentUser ? "My Wallet" : "Wallet"),
   },
   {
     key: "offersMade",
@@ -73,9 +70,9 @@ function useProfileTabs(isCurrentUser: boolean): [Tab, (tab: Tab) => void] {
 export default function User() {
   const { pubkey } = useParams<{ pubkey: string }>();
   // const wallet = useWallet()
-  const { user } = useSelector((data) => ({
-    user: data.user,
-  }));
+  // const { user } = useSelector((data: { user: any }) => ({
+  //   user: data.user,
+  // }));
   const {
     userNFTS,
     escrowAccounts: escrows,
@@ -84,8 +81,12 @@ export default function User() {
   } = useAccounts(pubkey!);
   const [tokenList, setTokenList] = React.useState<TokenAPISimple[]>([]);
   const [collections, setCollections] = React.useState<Collection[]>([]);
-  const [offerTokenList, setOfferTokenList] = React.useState<TokenAPISimple[]>([]);
-  const [receivedOfferTokenList, setReceivedOfferTokenList] = React.useState<TokenAPISimple[]>([]);
+  const [offerTokenList, setOfferTokenList] = React.useState<TokenAPISimple[]>(
+    []
+  );
+  const [receivedOfferTokenList, setReceivedOfferTokenList] = React.useState<
+    TokenAPISimple[]
+  >([]);
   const [progress, setProgress] = React.useState(true);
 
   const isCurrentUser = pubkey === "wallet?.publicKey?.toBase58()";
@@ -117,40 +118,60 @@ export default function User() {
     }
     if (nfts.length > 0) {
       setProgress(true);
-      getTokenList(pubkey, nfts)
-        .then((res) => {
-          res.tokens
-            ?.sort((a, b) => Number(b.last ?? 0) - Number(a.last ?? 0))
-            .sort(comparePrices);
+      // getTokenList(pubkey, nfts)
+      //   .then(
+      //     (res: {
+      //       tokens: {
+      //         sort: (arg0: (a: any, b: any) => number) => TokenAPISimple[];
+      //         filter: (arg0: {
+      //           (t: any): boolean;
+      //           (t: any): boolean;
+      //         }) => never[];
+      //       };
+      //       collections: any;
+      //     }) => {
+      //       res.tokens
+      //         ?.sort(
+      //           (a: { last: any }, b: { last: any }) =>
+      //             Number(b.last ?? 0) - Number(a.last ?? 0)
+      //         )
+      //         .sort(comparePrices);
 
-          const ownedTokens =
-            res.tokens?.filter((t) => ownedByUser.includes(t.mintId!)) ?? [];
+      //       const ownedTokens =
+      //         res.tokens?.filter((t: { mintId: string }) =>
+      //           ownedByUser.includes(t.mintId!)
+      //         ) ?? [];
 
-          setCollections(
-            (res.collections || []).sort(
-              (a, b) => a.title!.localeCompare(b.title!) || 0
-            )
-          );
-          setTokenList(ownedTokens);
+      //       setCollections(
+      //         (res.collections || []).sort(
+      //           (a: { title: any }, b: { title: any }) =>
+      //             a.title!.localeCompare(b.title!) || 0
+      //         )
+      //       );
+      //       setTokenList(ownedTokens);
 
-          setOfferTokenList(
-            res.tokens?.filter((t) => offerMints.includes(t.mintId!)) ?? []
-          );
+      //       setOfferTokenList(
+      //         res.tokens?.filter((t: { mintId: string }) =>
+      //           offerMints.includes(t.mintId!)
+      //         ) ?? []
+      //       );
 
-          setReceivedOfferTokenList(
-            ownedTokens?.filter((t) => !!t.offerPrice) ?? []
-          );
-          setProgress(false);
-        })
-        .catch((err) => {
-          addNotification(
-            "Unable to fetch token list",
-            `${err.message}`,
-            "error"
-          );
-          console.error(err);
-          setProgress(false);
-        });
+      //       setReceivedOfferTokenList(
+      //         ownedTokens?.filter((t: { offerPrice: any }) => !!t.offerPrice) ??
+      //           []
+      //       );
+      //       setProgress(false);
+      //     }
+      //   )
+      //   .catch((err: { message: any }) => {
+      //     addNotification(
+      //       "Unable to fetch token list",
+      //       `${err.message}`,
+      //       "error"
+      //     );
+      //     console.error(err);
+      //     setProgress(false);
+      //   });
     } else {
       setProgress(false);
       setTokenList([]);
@@ -173,13 +194,10 @@ export default function User() {
         <div className="flex flex-row flex-1 h-screen w-full">
           <div className="flex flex-col border-0 sm:border-r  border-gray-200 dark:border-zinc-600 pt-8 pb-4">
             <div className="hidden sm:flex w-32 sm:w-48 lg:w-96 flex-grow flex-col">
-              <nav
-                className="flex-1 px-2 space-y-8"
-                aria-label="Sidebar"
-              >
+              <nav className="flex-1 px-2 space-y-8" aria-label="Sidebar">
                 <div className="space-y-1">
                   <div className="mb-5 ml-2 text-lg">
-                    <AccountName pubkey={pubkey!} />
+                    {/* <AccountName pubkey={pubkey!} /> */}
                   </div>
                   <button
                     onClick={() => selectTab("nfts")}
@@ -192,9 +210,7 @@ export default function User() {
                   >
                     <ShoppingBagIcon
                       className={classNames(
-                        tab === "nfts"
-                          ? "text-gray-900 dark:text-white"
-                          : "",
+                        tab === "nfts" ? "text-gray-900 dark:text-white" : "",
                         "mr-3 flex-shrink-0 h-6 w-6"
                       )}
                       aria-hidden="true"
@@ -293,7 +309,7 @@ export default function User() {
               <div className="w-full sm:hidden">
                 <div className="sm:hidden mt-12 flex flex-col">
                   <div className="mb-5 ml-4 text-2xl">
-                    <AccountName pubkey={pubkey!} />
+                    {/* <AccountName pubkey={pubkey!} /> */}
                   </div>
                   <Listbox value={tab} onChange={selectTab}>
                     <div className="m-4 mt-1 relative">
@@ -352,9 +368,7 @@ export default function User() {
                                     {selected ? (
                                       <span
                                         className={classNames(
-                                          active
-                                            ? "text-white"
-                                            : "text-white",
+                                          active ? "text-white" : "text-white",
                                           "absolute inset-y-0 right-0 flex items-center pr-4"
                                         )}
                                       >
@@ -381,11 +395,11 @@ export default function User() {
                     {tab !== "history" && progress ? (
                       <div>
                         <div className="mb-8 h-8 w-96 overflow-hidden bg-gray-200 rounded-sm" />
-                        <FakeSimpleTokenList count={16} />
+                        {/* <FakeSimpleTokenList count={16} /> */}
                       </div>
                     ) : (
                       <>
-                        {tab === "nfts" && (
+                        {/* {tab === "nfts" && (
                           <TokenListing
                             collections={collections}
                             tokens={tokenList}
@@ -438,10 +452,10 @@ export default function User() {
                             showField={"offerPrice"}
                             isLoading={progress}
                           />
-                        )}
+                        )} */}
                       </>
                     )}
-                    {tab === "history" && (
+                    {/* {tab === "history" && (
                       <TradingHistory
                         resourceType="USER"
                         id={pubkey!}
@@ -454,7 +468,7 @@ export default function User() {
                         user={user}
                         collections={collections}
                       />
-                    )}
+                    )} */}
                   </main>
                 </div>
               </div>

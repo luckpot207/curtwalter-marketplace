@@ -1,7 +1,7 @@
 import {Footer as FlowFooter} from "../../lib/flowbite-react"
 import {BsDiscord, BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTwitter} from "react-icons/bs";
 import {AlphaArtLogo} from "../logo/AlphaArtLogo";
-import classNames from "classnames";
+// import classNames from "classnames";
 import {NavLink} from "react-router-dom";
 
 
@@ -18,17 +18,17 @@ export function Footer() {
               About
             </h2>
             <FlowFooter.LinkGroup className="flex-col">
-              <li className={classNames('mr-4 last:mr-0 md:mr-6 mb-4')}>
+              <li className="mr-4 last:mr-0 md:mr-6 mb-4">
                 <NavLink to='/explore' className='hover:text-black dark:hover:text-white'>
                   Explore
                 </NavLink>
               </li>
-              <li className={classNames('mr-4 last:mr-0 md:mr-6 mb-4')}>
+              <li className="mr-4 last:mr-0 md:mr-6 mb-4">
                 <NavLink to='/submissions' className='hover:text-black dark:hover:text-white'>
                   Creators
                 </NavLink>
               </li>
-              <li className={classNames('mr-4 last:mr-0 md:mr-6 mb-4')}>
+              <li className="mr-4 last:mr-0 md:mr-6 mb-4">
                 <a href='/privacy' target='_blank' className='hover:text-black dark:hover:text-white'>
                   Blog
                 </a>
@@ -59,7 +59,7 @@ export function Footer() {
               Legal
             </h2>
             <FlowFooter.LinkGroup className="flex-col">
-              <li className={classNames('mr-4 last:mr-0 md:mr-6 mb-4')}>
+              <li className="mr-4 last:mr-0 md:mr-6 mb-4">
                 <NavLink to='/privacy' className='hover:text-black dark:hover:text-white'>
                   Privacy Policy
                 </NavLink>

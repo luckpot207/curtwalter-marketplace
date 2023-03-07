@@ -1,22 +1,22 @@
-import { useMemo, useState } from "react";
+import {useMemo, useState} from "react";
 import AsyncSelect from "react-select/async";
 import debounce from "lodash/debounce";
 import Input from "./Input";
 import Control from "./Control";
 import MenuList from "./MenuList";
 import Option from "./Option";
-import { search } from "../../services/search";
+// import {search} from "../../services/search";
 import ValueContainer from "./ValueContainer";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export default function Search() {
   const [input, setInput] = useState("");
   const navigate = useNavigate()
 
   const loadOptions = (inputValue: string, callback: (options: any[]) => void) => {
-    search(inputValue).then((r) => {
-      callback(r.data.map((r: any) => ({ label: r.title, value: r.slug, image: r.thumbnail })));
-    });
+    // search(inputValue).then((r: { data: any[]; }) => {
+    //   callback(r.data.map((r) => ({ label: r.title, value: r.slug, image: r.thumbnail })));
+    // });
   };
 
   const handleInputChange = (newValue: string) => {
@@ -38,6 +38,7 @@ export default function Search() {
           onChange={(value: any) => {
             setInput("");
             navigate("/collection/" + value.value)
+              // .catch(console.error);
           }}
           noOptionsMessage={(s) =>
             s.inputValue ? (

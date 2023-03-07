@@ -10,6 +10,10 @@
     @apply bg-gray-300 hover:bg-gray-400 dark:border-zinc-900 dark:bg-zinc-700 dark:hover:bg-zinc-600;
 }
 
+.h-modal{
+  background-color: rgba(0,0,0,0.3);
+}
+
 .swiper {
     padding-bottom: 40px !important;
 }
