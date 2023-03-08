@@ -1,3 +1,4 @@
+
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { FaSignOutAlt, FaUserCircle, FaWallet } from 'react-icons/fa';
 
@@ -24,6 +25,8 @@ export const CConnectBtn = () => {
           chain &&
           (!authenticationStatus ||
             authenticationStatus === 'authenticated');
+        // call this function when you want to disconnect the wallet
+          // call the disconnect method on sdk object
 
         return (
           <div
@@ -51,7 +54,7 @@ export const CConnectBtn = () => {
                       <button onClick={openAccountModal} type="button">
                         <FaUserCircle className='w-7 h-7 text-gray-700 mr-5' />
                       </button>
-                      <button onClick={() => {  }} type="button">
+                      <button onClick={()=>{}} type="button">
                         <FaSignOutAlt className='w-7 h-7 text-gray-700 mr-5' />
                       </button>
                       <button onClick={openConnectModal} type="button">
