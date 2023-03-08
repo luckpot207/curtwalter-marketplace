@@ -1,14 +1,14 @@
-import { NavbarLink } from "./NavbarLink";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar } from "../../lib/flowbite-react";
-import { useTheme } from "../../lib/next-themes";
 import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BiMoon, BiSun, BiWallet } from "react-icons/bi";
+import { Avatar } from "../../lib/flowbite-react";
+import { NavbarLink } from "./NavbarLink";
+import { useTheme } from "../../themes";
 import { useStore } from "../../lib/store";
 // import {useWallet} from "@solana/wallet-adapter-react";
-import { theme } from "@cloudinary/url-gen/actions/effect";
 
 export function NavbarLinks() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
   // const {wallet, select} = useWallet();
   const {
     headerWalletMenuShow,
@@ -19,27 +19,27 @@ export function NavbarLinks() {
     headerBackDropShow,
     headerSearchOnMobileShow,
     setHeaderSearchOnMobileShow,
-    setHeaderSearchFocus
-  } = useStore()
+    setHeaderSearchFocus,
+  } = useStore();
 
   return (
-    <div className='h-full flex items-center justify-end'>
-
+    <div className="h-full flex items-center justify-end">
       {/* Explore */}
-      {!headerSearchOnMobileShow && (
-        <NavbarLink className='hidden lg:block'>
+      {/* {!headerSearchOnMobileShow && (
+        <NavbarLink className="hidden lg:block">
           <NavLink
-            to='/explore'
+            to="/explore"
             onClick={(e) => {
-              setHeaderWalletMenuShow(false)
-              setHeaderMobileMenuShow(false)
-              setHeaderBackDropShow(false)
+              setHeaderWalletMenuShow(false);
+              setHeaderMobileMenuShow(false);
+              setHeaderBackDropShow(false);
             }}
-            className='h-6 hover:text-black dark:hover:text-white'>
+            className="h-6 hover:text-black dark:hover:text-white"
+          >
             Explore
           </NavLink>
         </NavbarLink>
-      )}
+      )} */}
 
       {/* Creators */}
       {/*{ !headerSearchOnMobileShow && (
@@ -58,41 +58,49 @@ export function NavbarLinks() {
       )}*/}
 
       {/* Blog */}
-      {!headerSearchOnMobileShow && (
-        <NavbarLink className='hidden lg:block'>
-          <a rel='noreferrer'
-            href='https://blog.alpha.art'
-            target='_blank'
-            className='h-6 hover:text-black dark:hover:text-white'>
+      {/* {!headerSearchOnMobileShow && (
+        <NavbarLink className="hidden lg:block">
+          <a
+            rel="noreferrer"
+            href="https://blog.alpha.art"
+            target="_blank"
+            className="h-6 hover:text-black dark:hover:text-white"
+          >
             Blog
           </a>
         </NavbarLink>
-      )}
+      )} */}
 
       {/* Dark Theme */}
-      {theme === 'light' && !headerSearchOnMobileShow && (
-        <NavbarLink className='hidden md:block'>
-          <a href='#'
+      {theme === "light" && !headerSearchOnMobileShow && (
+        <NavbarLink className="hidden md:block">
+          <a
+            href="#"
             onClick={(e) => {
-              e.preventDefault()
-              setTheme('dark')
+              e.preventDefault();
+              setTheme("dark");
             }}
-            title='Dark Theme' className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'moon']} className='h-6' />
+            title="Dark Theme"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <BiMoon />
           </a>
         </NavbarLink>
       )}
 
       {/* Light Theme */}
-      {theme === 'dark' && !headerSearchOnMobileShow && (
-        <NavbarLink className='hidden md:block'>
-          <a href='#'
+      {theme === "dark" && !headerSearchOnMobileShow && (
+        <NavbarLink className="hidden md:block">
+          <a
+            href="#"
             onClick={(e) => {
-              e.preventDefault()
-              setTheme('light')
+              e.preventDefault();
+              setTheme("light");
             }}
-            title='Light Theme' className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'sun']} className='h-6' />
+            title="Light Theme"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <BiSun />
           </a>
         </NavbarLink>
       )}
@@ -137,75 +145,82 @@ export function NavbarLinks() {
         </NavbarLink>
       )} */}
 
-
       {/* Wallet Menu */}
       {!headerSearchOnMobileShow && (
-        <NavbarLink className='hidden md:block'>
-          <a href='#'
+        <NavbarLink className="hidden md:block">
+          <a
+            href="#"
             onClick={(e) => {
-              e.preventDefault()
+              e.preventDefault();
               if (!headerMobileMenuShow) {
-                setHeaderBackDropShow(!headerBackDropShow)
+                setHeaderBackDropShow(!headerBackDropShow);
               }
-              setHeaderWalletMenuShow(!headerWalletMenuShow)
+              setHeaderWalletMenuShow(!headerWalletMenuShow);
             }}
-            title='Wallet'
-            className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'wallet']} className='h-6' />
+            title="Wallet"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <BiWallet />
           </a>
         </NavbarLink>
       )}
 
       {/* Search */}
       {!headerSearchOnMobileShow && (
-        <NavbarLink className='sm:hidden'>
-          <a href='#'
+        <NavbarLink className="sm:hidden">
+          <a
+            href="#"
             onClick={(e) => {
-              e.preventDefault()
-              setHeaderSearchFocus(true)
-              setHeaderSearchOnMobileShow(true)
-              setHeaderWalletMenuShow(false)
-              setHeaderMobileMenuShow(false)
-              setHeaderBackDropShow(false)
+              e.preventDefault();
+              setHeaderSearchFocus(true);
+              setHeaderSearchOnMobileShow(true);
+              setHeaderWalletMenuShow(false);
+              setHeaderMobileMenuShow(false);
+              setHeaderBackDropShow(false);
             }}
-            title='Search'
-            className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'search']} className='h-6' />
+            title="Search"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <FontAwesomeIcon icon={["fas", "search"]} className="h-6" />
           </a>
         </NavbarLink>
       )}
 
       {/* Mobile Menu */}
       {!headerMobileMenuShow && !headerSearchOnMobileShow && (
-        <NavbarLink className='lg:hidden'>
-          <a href='#'
+        <NavbarLink className="lg:hidden">
+          <a
+            href="#"
             onClick={(e) => {
-              e.preventDefault()
-              setHeaderMobileMenuShow(true)
-              setHeaderBackDropShow(true)
+              e.preventDefault();
+              setHeaderMobileMenuShow(true);
+              setHeaderBackDropShow(true);
             }}
-            title='Menu'
-            className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'bars']} className='h-6' />
+            title="Menu"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <FontAwesomeIcon icon={["fas", "bars"]} className="h-6" />
           </a>
         </NavbarLink>
       )}
 
       {/* Close Mobile Menu */}
       {headerMobileMenuShow && !headerSearchOnMobileShow && (
-        <NavbarLink className='lg:hidden'>
-          <a href='#'
+        <NavbarLink className="lg:hidden">
+          <a
+            href="#"
             onClick={(e) => {
-              e.preventDefault()
-              setHeaderMobileMenuShow(false)
-              setHeaderBackDropShow(false)
+              e.preventDefault();
+              setHeaderMobileMenuShow(false);
+              setHeaderBackDropShow(false);
             }}
-            title='Close'
-            className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'xmark-large']} className='h-6' />
+            title="Close"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <FontAwesomeIcon icon={["fas", "xmark-large"]} className="h-6" />
           </a>
         </NavbarLink>
       )}
     </div>
-  )
+  );
 }

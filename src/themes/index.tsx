@@ -7,7 +7,7 @@ import React, {
   useState,
   memo,
 } from "react";
-import type { UseThemeProps, ThemeProviderProps } from "../../themes/types";
+import type { UseThemeProps, ThemeProviderProps } from "./types";
 
 const colorSchemes = ["light", "dark"];
 const MEDIA = "(prefers-color-scheme: dark)";
