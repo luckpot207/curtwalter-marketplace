@@ -13,6 +13,7 @@ import {
   JsonRpcFetchFunc,
   Web3Provider,
 } from "@ethersproject/providers";
+import { LaunchPad } from "./pages/launchpad";
 
 import "flowbite";
 import "./index.css";
@@ -74,6 +75,7 @@ function App() {
                 <Submissions />
               </Route> */}
                 <Route path="/" element={<Index />} />
+                <Route path="/launch" element={<LaunchPad loader={false} />} />
               </Routes>
             </Router>
             <NotificationOverlay />

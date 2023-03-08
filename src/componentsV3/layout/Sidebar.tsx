@@ -1,4 +1,8 @@
+import {useNavigate} from "react-router-dom";
+
 export function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside
       id="sidebar-multi-level-sidebar"
@@ -102,7 +106,7 @@ export function Sidebar() {
                 </button>
               </li>
               <li>
-                <button className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
+                <button onClick={() => {navigate('/launch')}} className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
                   Apply for launchpad
                 </button>
               </li>
