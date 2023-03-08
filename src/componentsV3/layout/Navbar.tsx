@@ -1,14 +1,15 @@
 import { NavbarBrand } from "./NavbarBrand";
 import { NavbarSearch } from "./NavbarSearch";
+import { NavBarBtns } from "./NavBarBtns";
 // import {NavbarLinks} from "./NavbarLinks";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 
 export function Navbar() {
   return (
-    <nav className="flex h-full">
+    <nav className="flex items-center h-full pr-5 ">
       <NavbarBrand />
       <NavbarSearch />
-      <ConnectButton label="Connect" />
+      <NavBarBtns/>
       {/* <NavbarLinks/> */}
     </nav>
   );
