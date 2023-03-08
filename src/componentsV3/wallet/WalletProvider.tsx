@@ -8,31 +8,17 @@ import {
   lightTheme,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  polygonMumbai,
-} from "wagmi/chains";
+import { polygon, polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 export function WalletProvider({ children }: PropsWithChildren<{}>) {
   const { chains, provider, webSocketProvider } = configureChains(
-    [
-      // mainnet,
-      polygon,
-      // optimism,
-      // arbitrum,
-      ...(process.env.REACT_APP_ENABLE_TESTNETS === "true"
-        ? [polygonMumbai]
-        : []),
-    ],
+    [polygon, polygonMumbai],
     [publicProvider()]
   );
 
   const { connectors } = getDefaultWallets({
-    appName: "RainbowKit demo",
+    appName: "NFT marketplace",
     chains,
   });
 

@@ -3,7 +3,7 @@ import { Image } from "../image/Image";
 // import {fetcher, lamportsToSOL, marketplaceServerUrl, nFormatter, tokenImage} from "../../lib/utils";
 import { SolanaLogo } from "../logo/SolanaLogo";
 import { Button } from "../../lib/flowbite-react";
-import { useTheme } from "../../lib/next-themes";
+import { useTheme } from "../../themes";
 import SpaceLauncher from "../../assets/nfts/5852.jpg";
 // import {Listing} from "@piggydao/marketplace-models";
 

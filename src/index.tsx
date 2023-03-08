@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { NotificationOverlay } from "./components/notifications";
-import { ThemeProvider } from "./lib/next-themes";
+import { ThemeProvider } from "./themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
@@ -24,7 +24,6 @@ function App() {
     <ZustandProvider createStore={createStore}>
       <ThemeProvider
         defaultTheme="light"
-        forcedTheme="light"
         themes={["light", "dark"]}
         attribute="class"
       >
