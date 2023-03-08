@@ -1,14 +1,26 @@
 import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BiMoon, BiSun, BiWallet } from "react-icons/bi";
+import {
+  BiMoon,
+  BiSun,
+  BiLogOut,
+  BiUserCircle,
+  BiWallet,
+  BiSearch,
+  BiBattery,
+  BiMask,
+} from "react-icons/bi";
 import { Avatar } from "../../lib/flowbite-react";
 import { NavbarLink } from "./NavbarLink";
 import { useTheme } from "../../themes";
 import { useStore } from "../../lib/store";
-// import {useWallet} from "@solana/wallet-adapter-react";
+import { useAccount } from "wagmi";
+import { useWeb3React } from "@web3-react/core";
 
 export function NavbarLinks() {
   const { theme, setTheme } = useTheme();
+  const { address, isConnected, isDisconnected } = useAccount();
+  const { deactivate, account } = useWeb3React();
+
   // const {wallet, select} = useWallet();
   const {
     headerWalletMenuShow,
@@ -106,44 +118,39 @@ export function NavbarLinks() {
       )}
 
       {/* Connected Account */}
-      {/* { wallet?.adapter.connected && !headerSearchOnMobileShow && (
-        <NavbarLink className='hidden md:block'>
+      {account && !headerSearchOnMobileShow && (
+        <NavbarLink className="hidden md:block">
           <NavLink
-            to={`/user/${wallet?.adapter.publicKey?.toBase58()}`}
+            to={`/user/${address}`}
             onClick={(e) => {
-              setHeaderWalletMenuShow(false)
-              setHeaderMobileMenuShow(false)
-              setHeaderBackDropShow(false)
+              setHeaderWalletMenuShow(false);
+              setHeaderMobileMenuShow(false);
+              setHeaderBackDropShow(false);
             }}
-            className='hover:text-black dark:hover:text-white'>
-            <Avatar rounded={true} status='online' size='xs' />
+            className="hover:text-black dark:hover:text-white"
+          >
+            <Avatar rounded={true} status="online" size="xs" />
           </NavLink>
         </NavbarLink>
-      )} */}
-
-      {/* Disconnected Account */}
-      {/*{ !wallet?.adapter.connected && (
-        <NavbarLink>
-          <a href='#' title='Account' className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'user-circle']} className='h-6'/>
-          </a>
-        </NavbarLink>
-      )}*/}
+      )}
 
       {/* Logout */}
-      {/* { wallet?.adapter.connected && !headerSearchOnMobileShow && (
-        <NavbarLink className='hidden md:block'>
-          <a href='#'
-             onClick={(e) => {
-               e.preventDefault()
-               select(null!)
-             }}
-             title='Logout'
-             className='hover:text-black dark:hover:text-white'>
-            <FontAwesomeIcon icon={['fas', 'arrow-right-from-bracket']} className='h-6'/>
+      {!account && !headerSearchOnMobileShow && (
+        <NavbarLink className="hidden md:block">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              deactivate();
+              //  select(null!)
+            }}
+            title="Logout"
+            className="hover:text-black dark:hover:text-white"
+          >
+            <BiLogOut />
           </a>
         </NavbarLink>
-      )} */}
+      )}
 
       {/* Wallet Menu */}
       {!headerSearchOnMobileShow && (
@@ -181,7 +188,7 @@ export function NavbarLinks() {
             title="Search"
             className="hover:text-black dark:hover:text-white"
           >
-            <FontAwesomeIcon icon={["fas", "search"]} className="h-6" />
+            <BiSearch />
           </a>
         </NavbarLink>
       )}
@@ -199,7 +206,7 @@ export function NavbarLinks() {
             title="Menu"
             className="hover:text-black dark:hover:text-white"
           >
-            <FontAwesomeIcon icon={["fas", "bars"]} className="h-6" />
+            <BiBattery />
           </a>
         </NavbarLink>
       )}
@@ -217,7 +224,7 @@ export function NavbarLinks() {
             title="Close"
             className="hover:text-black dark:hover:text-white"
           >
-            <FontAwesomeIcon icon={["fas", "xmark-large"]} className="h-6" />
+            <BiMask />
           </a>
         </NavbarLink>
       )}

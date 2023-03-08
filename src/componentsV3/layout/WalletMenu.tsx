@@ -4,9 +4,12 @@ import { useStore } from "../../lib/store";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import WalletSelector from "../wallet/WalletSelector";
 import WalletSummary from "../wallet/WalletSummary";
+import { useAccount } from "wagmi";
+import { useWeb3React } from "@web3-react/core";
 
 export function WalletMenu() {
-  // const {wallet} = useWallet();
+  const { account } = useWeb3React();
+  const { address, isConnected } = useAccount();
   const { headerWalletMenuShow } = useStore();
 
   return (
@@ -20,11 +23,11 @@ export function WalletMenu() {
       })}
     >
       {/* <ConnectButton /> */}
-      <WalletSelector showBackButton={true} />
-      {/* { wallet?.adapter.connected
-        ? (<WalletSummary showBackButton={true}/>)
-        : (<WalletSelector showBackButton={true}/>)
-      } */}
+      {account ? (
+        <WalletSummary showBackButton={true} />
+      ) : (
+        <WalletSelector showBackButton={true} />
+      )}
     </div>
   );
 }

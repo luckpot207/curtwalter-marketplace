@@ -11,8 +11,8 @@ export function Header() {
         <Navbar />
       </header>
       <Sidebar />
-      {/* <Backdrop /> */}
-      {/* <WalletMenu /> */}
+      <Backdrop />
+      <WalletMenu />
       {/*<MobileMenu/> */}
     </>
   );

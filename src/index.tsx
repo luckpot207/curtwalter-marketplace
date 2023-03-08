@@ -9,6 +9,12 @@ import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
 import { Explore } from "./pages/explore";
 import { LaunchPad } from "./pages/launchpad"
+import { Web3ReactProvider } from "@web3-react/core";
+import {
+  ExternalProvider,
+  JsonRpcFetchFunc,
+  Web3Provider,
+} from "@ethersproject/providers";
 
 import "flowbite";
 import "./index.css";
@@ -16,6 +22,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+
+function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
+  return new Web3Provider(provider);
+}
 
 function App() {
   // @ts-ignore
@@ -29,9 +39,10 @@ function App() {
         attribute="class"
       >
         <WalletProvider>
-          <Router>
-            <Routes>
-              {/* <Route path="/explore">
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Router>
+              <Routes>
+                {/* <Route path="/explore">
                 <Explore />
               </Route>
               <Route path="/faq">
@@ -64,12 +75,13 @@ function App() {
               <Route path="/submissions">
                 <Submissions />
               </Route> */}
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/launch" element={<LaunchPad loader={false} />} />
-              <Route path="/" element={<Index />} />
-            </Routes>
-          </Router>
-          <NotificationOverlay />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/" element={<Index />} />
+                <Route path="/launch" element={<LaunchPad loader={false} />} />
+              </Routes>
+            </Router>
+            <NotificationOverlay />
+          </Web3ReactProvider>
         </WalletProvider>
       </ThemeProvider>
     </ZustandProvider>
