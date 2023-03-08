@@ -2,7 +2,13 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
+  content: [
+    "./src/index.css",
+    "./src/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{html,js}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {

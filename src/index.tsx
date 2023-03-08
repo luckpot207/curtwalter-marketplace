@@ -8,6 +8,7 @@ import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
 
+import "flowbite";
 import "./index.css";
 import "swiper/css";
 import "swiper/css/navigation";

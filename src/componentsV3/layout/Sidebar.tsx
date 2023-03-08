@@ -2,15 +2,15 @@ export function Sidebar() {
   return (
     <aside
       id="sidebar-multi-level-sidebar"
-      className={`fixed top-[62px] left-0 z-40 w-14 h-screen duration-700 hover:w-64`}
+      className={`fixed top-[62px] left-0 z-40 w-14 h-screen duration-500 hover:w-64`}
       aria-label="Sidebar"
     >
       <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
         <ul className="space-y-2 pt-100">
           <li>
-            <a
-              href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            <button
+              type="button"
+              className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
             >
               <svg
                 aria-hidden="true"
@@ -22,33 +22,61 @@ export function Sidebar() {
                 <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
               <span className="ml-3">Dashboard</span>
-            </a>
+            </button>
           </li>
           <li>
             <button
               type="button"
               className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-              aria-controls="dropdown-example"
-              data-collapse-toggle="dropdown-example"
+              aria-controls="dropdown-launchpad"
+              data-collapse-toggle="dropdown-launchpad"
             >
               <svg
                 aria-hidden="true"
-                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
-                  clip-rule="evenodd"
-                ></path>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M15.2855 17.0113C14.7666 20.0509 10.5501 20.4239 9.50564 17.5226L7.15545 10.9943C6.29564 8.60595 8.60591 6.29569 10.9943 7.15551L17.5226 9.50569C20.4238 10.5501 20.0509 14.7666 17.0113 15.2856L16.2354 15.418C15.8171 15.4894 15.4894 15.8171 15.418 16.2355L15.2855 17.0113Z"
+                  ></path>
+                  <path
+                    d="M10 4V3"
+                    stroke="#323232"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M4 10H3"
+                    stroke="#323232"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M4 4L6 6"
+                    stroke="#323232"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </g>
               </svg>
               <span
                 className="flex-1 ml-3 text-left whitespace-nowrap"
                 sidebar-toggle-item
               >
-                E-commerce
+                Launchpad
               </span>
               <svg
                 sidebar-toggle-item
@@ -64,30 +92,19 @@ export function Sidebar() {
                 ></path>
               </svg>
             </button>
-            <ul id="dropdown-example" className="hidden py-2 space-y-2">
+            <ul
+              id="dropdown-launchpad"
+              className="hidden py-2 space-y-2 duration-1000"
+            >
               <li>
-                <a
-                  href="#"
-                  className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
-                  Products
-                </a>
+                <button className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
+                  Launches
+                </button>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
-                  Billing
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
-                  Invoice
-                </a>
+                <button className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
+                  Apply for launchpad
+                </button>
               </li>
             </ul>
           </li>
@@ -136,27 +153,7 @@ export function Sidebar() {
               </span>
             </a>
           </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <svg
-                aria-hidden="true"
-                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">Products</span>
-            </a>
-          </li>
+
           <li>
             <a
               href="#"
@@ -176,27 +173,6 @@ export function Sidebar() {
                 ></path>
               </svg>
               <span className="flex-1 ml-3 whitespace-nowrap">Sign In</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <svg
-                aria-hidden="true"
-                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">Sign Up</span>
             </a>
           </li>
         </ul>
