@@ -1,4 +1,4 @@
-import { useTheme } from "../../lib/next-themes";
+import { useTheme } from "../../themes";
 import { Link } from "react-router-dom";
 
 export function AlphaArtLogo({ className }: { className?: string }) {
