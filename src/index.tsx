@@ -23,7 +23,7 @@ function App() {
     <ZustandProvider createStore={createStore}>
       <ThemeProvider
         defaultTheme="light"
-        forcedTheme="dark"
+        forcedTheme="light"
         themes={["light", "dark"]}
         attribute="class"
       >
