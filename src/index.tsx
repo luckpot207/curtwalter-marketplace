@@ -7,6 +7,7 @@ import { ThemeProvider } from "./themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
+import { Explore } from "./pages/explore";
 import { LaunchPad } from "./pages/launchpad"
 
 import "flowbite";
@@ -63,6 +64,7 @@ function App() {
               <Route path="/submissions">
                 <Submissions />
               </Route> */}
+              <Route path="/explore" element={<Explore />} />
               <Route path="/launch" element={<LaunchPad loader={false} />} />
               <Route path="/" element={<Index />} />
             </Routes>
