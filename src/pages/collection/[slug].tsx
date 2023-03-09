@@ -72,17 +72,10 @@ export function Collection() {
       volume: 44,
       alternativeAuthorities: ["favor", "John"],
       collaborators: ["Ted", "Paul"],
-<<<<<<< HEAD
       addedAt: "1678393314524",
       all_sales: 32
     }
   }
-=======
-      addedAt: new Date().getTime(),
-      all_sales: 32,
-    },
-  };
->>>>>>> 1be264c823c1c613c229890298bc25935fc6209a
   // const {
   //   progress,
   //   tokenList,
