@@ -13,15 +13,15 @@ import { Avatar } from "../../lib/flowbite-react";
 import { NavbarLink } from "./NavbarLink";
 import { useTheme } from "../../themes";
 import { useStore } from "../../lib/store";
-import { useAccount } from "wagmi";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export function NavbarLinks() {
   const { theme, setTheme } = useTheme();
   const { address, isConnected, isDisconnected } = useAccount();
-  const { deactivate, account } = useWeb3React();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
 
-  // const {wallet, select} = useWallet();
   const {
     headerWalletMenuShow,
     setHeaderWalletMenuShow,
@@ -118,11 +118,11 @@ export function NavbarLinks() {
       )}
 
       {/* Connected Account */}
-      {account && !headerSearchOnMobileShow && (
+      {isConnected && !headerSearchOnMobileShow && (
         <NavbarLink className="hidden md:block">
           <NavLink
             to={`/user/${address}`}
-            onClick={(e) => {
+            onClick={() => {
               setHeaderWalletMenuShow(false);
               setHeaderMobileMenuShow(false);
               setHeaderBackDropShow(false);
@@ -135,13 +135,14 @@ export function NavbarLinks() {
       )}
 
       {/* Logout */}
-      {!account && !headerSearchOnMobileShow && (
+      {isConnected && !headerSearchOnMobileShow && (
         <NavbarLink className="hidden md:block">
           <a
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              deactivate();
+              disconnect();
+              // disconnectWeb3Modal();
               //  select(null!)
             }}
             title="Logout"
@@ -151,25 +152,85 @@ export function NavbarLinks() {
           </a>
         </NavbarLink>
       )}
-
+      {/* <Web3Button /> */}
       {/* Wallet Menu */}
-      {!headerSearchOnMobileShow && (
-        <NavbarLink className="hidden md:block">
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              if (!headerMobileMenuShow) {
-                setHeaderBackDropShow(!headerBackDropShow);
-              }
-              setHeaderWalletMenuShow(!headerWalletMenuShow);
-            }}
-            title="Wallet"
-            className="hover:text-black dark:hover:text-white"
-          >
-            <BiWallet />
-          </a>
-        </NavbarLink>
+      {!isConnected && !headerSearchOnMobileShow && (
+        // <NavbarLink className="hidden md:block">
+        //   <a
+        //     href="#"
+        //     onClick={(e) => {
+        //       e.preventDefault();
+        //       open();
+        //       // disconnectWeb3Modal();
+        //       //  select(null!)
+        //     }}
+        //     title="Connect wallet"
+        //     className="hover:text-black dark:hover:text-white"
+        //   >
+        //     <BiWallet />
+        //   </a>
+        // </NavbarLink>
+        <ConnectButton.Custom>
+          {({
+            account,
+            chain,
+            openAccountModal,
+            openChainModal,
+            openConnectModal,
+            mounted,
+          }) => {
+            return (
+              <div
+                {...(!mounted && {
+                  "aria-hidden": true,
+                  style: {
+                    opacity: 0,
+                    pointerEvents: "none",
+                    userSelect: "none",
+                  },
+                })}
+              >
+                {(() => {
+                  if (!mounted || !account || !chain) {
+                    return (
+                      <NavbarLink className="hidden md:block">
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openConnectModal();
+                          }}
+                          title="Connect wallet"
+                          className="hover:text-black dark:hover:text-white"
+                        >
+                          <BiWallet />
+                        </a>
+                      </NavbarLink>
+                    );
+                  }
+
+                  if (chain.unsupported) {
+                    return (
+                      <NavbarLink className="hidden md:block">
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openConnectModal();
+                          }}
+                          title="Connect wallet"
+                          className="hover:text-black dark:hover:text-white"
+                        >
+                          Wrong network
+                        </a>
+                      </NavbarLink>
+                    );
+                  }
+                })()}
+              </div>
+            );
+          }}
+        </ConnectButton.Custom>
       )}
 
       {/* Search */}

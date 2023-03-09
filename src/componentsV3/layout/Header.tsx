@@ -1,6 +1,5 @@
 import { Navbar } from "./Navbar";
 import { Backdrop } from "./Backdrop";
-import { WalletMenu } from "./WalletMenu";
 // import {MobileMenu} from "./MobileMenu";
 import { Sidebar } from "./Sidebar";
 
@@ -12,7 +11,6 @@ export function Header() {
       </header>
       <Sidebar />
       <Backdrop />
-      <WalletMenu />
       {/*<MobileMenu/> */}
     </>
   );

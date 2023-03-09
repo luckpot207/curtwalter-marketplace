@@ -7,7 +7,6 @@ import { ThemeProvider } from "./themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
-import { Web3ReactProvider } from "@web3-react/core";
 import {
   ExternalProvider,
   JsonRpcFetchFunc,
@@ -38,10 +37,9 @@ function App() {
         attribute="class"
       >
         <WalletProvider>
-          <Web3ReactProvider getLibrary={getLibrary}>
-            <Router>
-              <Routes>
-                {/* <Route path="/explore">
+          <Router>
+            <Routes>
+              {/* <Route path="/explore">
                 <Explore />
               </Route>
               <Route path="/faq">
@@ -74,12 +72,11 @@ function App() {
               <Route path="/submissions">
                 <Submissions />
               </Route> */}
-                <Route path="/" element={<Index />} />
-                <Route path="/launch" element={<LaunchPad loader={false} />} />
-              </Routes>
-            </Router>
-            <NotificationOverlay />
-          </Web3ReactProvider>
+              <Route path="/" element={<Index />} />
+              <Route path="/launch" element={<LaunchPad loader={false} />} />
+            </Routes>
+          </Router>
+          <NotificationOverlay />
         </WalletProvider>
       </ThemeProvider>
     </ZustandProvider>

@@ -13,7 +13,10 @@ import { publicProvider } from "wagmi/providers/public";
 
 export function WalletProvider({ children }: PropsWithChildren<{}>) {
   const { chains, provider, webSocketProvider } = configureChains(
-    [polygon, polygonMumbai],
+    [
+      // polygon,
+      polygonMumbai,
+    ],
     [publicProvider()]
   );
 
