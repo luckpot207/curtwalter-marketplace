@@ -78,6 +78,7 @@
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@types/bs58": "^4.0.1",
     "@types/lodash": "^4.14.191",
     "@types/react-datepicker": "^4.10.0",
     "@types/react-helmet": "^6.1.6",

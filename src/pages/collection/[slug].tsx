@@ -40,7 +40,7 @@ export function Collection() {
       volume: 44,
       alternativeAuthorities: ["favor", "John"],
       collaborators: ["Ted", "Paul"],
-      addedAt: new Date().getTime(),
+      addedAt: "1678393314524",
       all_sales: 32
     }
   }

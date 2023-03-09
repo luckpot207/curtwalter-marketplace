@@ -137,7 +137,7 @@ export function Explore() {
               )
             : "",
         totalItems: 1000,
-        addedAt: Date.now().toString(),
+        addedAt: "1678393314524",
         listedCount: 10,
         floorPrice: "0",
       })

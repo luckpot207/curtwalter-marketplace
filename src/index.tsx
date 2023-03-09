@@ -10,6 +10,7 @@ import { Index } from "./pages";
 import { Explore } from "./pages/explore";
 import { Collection } from "./pages/collection/[slug]";
 import { LaunchPad } from "./pages/launchpad";
+import { User } from "./pages/user/[pubkey]";
 import {
   ExternalProvider,
   JsonRpcFetchFunc,
@@ -23,6 +24,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { MarketplaceProvider } from "./context/MarketplaceProvider";
+
 
 function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
   return new Web3Provider(provider);
@@ -76,6 +78,7 @@ function App() {
                 <Route path="/" element={<Index />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/collection/:slug" element={<Collection />} />
+                <Route path="/user/:pubkey" element={<User />} />
                 <Route path="/launch" element={<LaunchPad loader={false} />} />
               </Routes>
             </Router>
