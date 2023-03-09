@@ -7,12 +7,13 @@ import { ThemeProvider } from "./themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
+import { Explore } from "./pages/explore";
+import { LaunchPad } from "./pages/launchpad";
 import {
   ExternalProvider,
   JsonRpcFetchFunc,
   Web3Provider,
 } from "@ethersproject/providers";
-import { LaunchPad } from "./pages/launchpad";
 
 import "flowbite";
 import "./index.css";
@@ -72,6 +73,7 @@ function App() {
               <Route path="/submissions">
                 <Submissions />
               </Route> */}
+              <Route path="/explore" element={<Explore />} />
               <Route path="/" element={<Index />} />
               <Route path="/launch" element={<LaunchPad loader={false} />} />
             </Routes>

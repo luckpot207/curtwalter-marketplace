@@ -67,7 +67,7 @@ export function LaunchPad(props: {
             <>
               <div className="w-full h-full flex items-center justify-center">
                 <form onSubmit={handleSubmit} className="h-full flex-row items-center p-5 w-full px-5">
-                  <div className="mb-10 font-medium text-center font-bold text-[15px]">
+                  <div className="mb-10 font-medium text-center text-[15px]">
                     Apply for Launchpad
                   </div>
                   <div className="relative mb-4">
@@ -77,7 +77,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="description"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.projectName || ""}
@@ -104,7 +104,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="team"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.team || ""}
@@ -118,7 +118,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="supply"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.supply || ""}
@@ -132,7 +132,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="price"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.price || ""}
@@ -146,7 +146,7 @@ export function LaunchPad(props: {
                     <input
                       type="date"
                       name="mintDate"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       // value={inputs.mintDate || (new Date()).toISOString().split('T')[0]}
@@ -163,7 +163,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="youtube"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.youtube || ""}
@@ -177,7 +177,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="twitter"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.twitter || ""}
@@ -191,7 +191,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="facebook"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.facebook || ""}
@@ -205,7 +205,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="linkedin"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.linkedin || ""}
@@ -219,7 +219,7 @@ export function LaunchPad(props: {
                     <input
                       type="text"
                       name="instagram"
-                      className="border placeholder-gray-400 focus:outline-none border
+                      className="border placeholder-gray-400 focus:outline-none 
                                w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       value={inputs.instagram || ""}
