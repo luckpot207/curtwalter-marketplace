@@ -40,10 +40,7 @@ function App() {
         <WalletProvider>
           <Router>
             <Routes>
-              {/* <Route path="/explore">
-                <Explore />
-              </Route>
-              <Route path="/faq">
+              {/* <Route path="/faq">
                 <FAQ />
               </Route>
               <Route path="/collection/:slug/activity">
@@ -72,9 +69,9 @@ function App() {
               </Route>
               <Route path="/submissions">
                 <Submissions />
-              </Route> */}
-              <Route path="/explore" element={<Explore />} />
+              </Route>  */}
               <Route path="/" element={<Index />} />
+              <Route path="/explore" element={<Explore />} />
               <Route path="/launch" element={<LaunchPad loader={false} />} />
             </Routes>
           </Router>
