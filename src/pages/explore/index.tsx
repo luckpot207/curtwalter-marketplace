@@ -29,11 +29,11 @@ const CategoryData_ = {
 
 const CollectionData_ = {
     id: "1",
-    slug: "my slug",
+    slug: "my_slug",
     title: "my title",
     thumbnail: MoonkeesNft,
     totalItems: 487,
-    addedAt: "my add",
+    addedAt: "my_add",
     listedCount: 26,
     floorPrice: "floorPrice",
 }
