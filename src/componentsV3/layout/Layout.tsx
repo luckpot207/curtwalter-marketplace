@@ -27,7 +27,7 @@ export function Layout({
     <>
       <Header />
       <main
-        className={`pt-16 ${flex}`}
+        className={`pt-16 ${flex} ml-[54px]`}
         onClick={(e) => {
           e.preventDefault();
           // setCollectionTrendingGridIntervalDropdownOpen(false)

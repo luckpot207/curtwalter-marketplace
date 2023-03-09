@@ -40,7 +40,7 @@ export function LaunchPad(props: {
   return (
 
     <Layout footer={true}>
-      <div className="container w-[50%] py-8 px-4 ml-[54px] flex justify-center">
+      <div className="container w-[50%] py-8 px-4 flex justify-center">
 
         <div
           className={`w-full bg-gray-100 dark:bg-zinc-800 shadow-md rounded-3xl p-4  last:mr-0 flex ${darkMode ? "purple-border-hover" : "gray-border-hover"

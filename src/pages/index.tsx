@@ -11,7 +11,7 @@ import { TrendingGrid } from "../componentsV3/collections/TrendingGrid";
 export function Index() {
   return (
     <Layout footer={true}>
-      <div className="container py-8 px-4 ml-[54px]">
+      <div className="container py-8 px-4">
         <Hero />
         <Trending24hCollectionsCarousel />
         <NewCollectionsCarousel />

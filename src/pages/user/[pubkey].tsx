@@ -294,7 +294,7 @@ export function User() {
 
   return (
     <Layout>
-      <div className="h-screen flex flex-col w-full max-h-screen">
+      <div className="h-screen flex flex-col w-full max-h-screen ">
         <Helmet>
           <title>Alpha.art | Account</title>
         </Helmet>
