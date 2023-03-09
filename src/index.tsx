@@ -21,6 +21,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { MarketplaceProvider } from "./context/MarketplaceProvider";
 
 function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
   return new Web3Provider(provider);
@@ -38,9 +39,10 @@ function App() {
         attribute="class"
       >
         <WalletProvider>
-          <Router>
-            <Routes>
-              {/* <Route path="/faq">
+          <MarketplaceProvider>
+            <Router>
+              <Routes>
+                {/* <Route path="/faq">
                 <FAQ />
               </Route>
               <Route path="/collection/:slug/activity">
@@ -70,12 +72,13 @@ function App() {
               <Route path="/submissions">
                 <Submissions />
               </Route>  */}
-              <Route path="/" element={<Index />} />
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/launch" element={<LaunchPad loader={false} />} />
-            </Routes>
-          </Router>
-          <NotificationOverlay />
+                <Route path="/" element={<Index />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/launch" element={<LaunchPad loader={false} />} />
+              </Routes>
+            </Router>
+            <NotificationOverlay />
+          </MarketplaceProvider>
         </WalletProvider>
       </ThemeProvider>
     </ZustandProvider>
