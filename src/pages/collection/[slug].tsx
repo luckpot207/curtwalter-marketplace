@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SimpleToken, { ItemShowField } from "../../components/simpleToken";
 import CollectionHeader from "../../components/collectionHeader";
 import FilterBar from "../../components/filterBar";
@@ -7,19 +7,51 @@ import { Filters, MobileFilters } from "../../components/filters";
 // import { listCollection, fetchNextPage } from "../../api/actions";
 import { FakeSimpleTokenList } from "../../components/fakes/FakeSimpleTokenList";
 import { FakeSimpleToken } from "../../components/fakes/FakeSimpleToken";
-import { OrderBy } from "../../data/marketplace.pb";
+import { OrderBy, TokenAPISimple } from "../../data/marketplace.pb";
 import { useParams } from "react-router-dom";
 import useURLFilter from "../../utils/useURLFilter";
 import useCollection from "../../utils/useCollection";
 import { SearchModal } from "../../components/SearchModal";
 import { classNames } from "../../utils/clsx";
-import { TwitterStyleCollections, ObjectContainCollections } from "../../custom";
-import {Layout} from "../../componentsV3/layout/Layout";
+import {
+  TwitterStyleCollections,
+  ObjectContainCollections,
+} from "../../custom";
+import { Layout } from "../../componentsV3/layout/Layout";
 import MoonkeesNft from "../../assets/nfts/moonkes.png";
+import { NFT } from "../../typechain-types";
+import useMarketplaceContract from "../../hooks/useMarketplaceContract";
+import { NftCollection as INftCollection } from "../../types/nft";
+import { BigNumber, ethers } from "ethers";
 
 export function Collection() {
   const { slug } = useParams<{ slug: string }>();
+  const { getCollection } = useMarketplaceContract();
+  const [collection, setCollection] = useState<INftCollection | null>(null);
+  const [tokenList, setTokenList] = useState<TokenAPISimple[]>([]);
+  const [expectedTokenCount, setExpectedTokenCount] = useState<number>(0);
   // const [collectionMeta] = useCollection(slug!);
+
+  const getCollectionData = async (address: string) => {
+    const collection = await getCollection(address);
+    setCollection(collection);
+    if (collection?.nftsInCollection.length) {
+      setExpectedTokenCount(collection?.nftsInCollection.length);
+      const tokenlist: TokenAPISimple[] = collection?.nftsInCollection.map(
+        (nft) => ({
+          mintId: nft.tokenId.toString(),
+          title: nft.tokenId.toString(),
+          image: nft.tokenUri.name ?? "",
+          listedForSale: true,
+          price: ethers.utils.formatEther(nft.tokenPrice),
+          offerPrice: ethers.utils.formatEther(nft.tokenPrice),
+          last: ethers.utils.formatEther(nft.tokenPrice),
+          collectionId: collection.nftContractAddr,
+        })
+      );
+      setTokenList(tokenlist);
+    }
+  };
 
   const collectionMeta = {
     collection: {
@@ -40,10 +72,17 @@ export function Collection() {
       volume: 44,
       alternativeAuthorities: ["favor", "John"],
       collaborators: ["Ted", "Paul"],
+<<<<<<< HEAD
       addedAt: "1678393314524",
       all_sales: 32
     }
   }
+=======
+      addedAt: new Date().getTime(),
+      all_sales: 32,
+    },
+  };
+>>>>>>> 1be264c823c1c613c229890298bc25935fc6209a
   // const {
   //   progress,
   //   tokenList,
@@ -61,12 +100,10 @@ export function Collection() {
   // }));
 
   const progress = false;
-  const tokenList = ["aaaaa", "fffff", "bbbbb"];
+  // const tokenList = ["aaaaa", "fffff", "bbbbb"];
   const filterIndex = 0;
-  let expectedTokenCount = 100;
-  const nextPageToken = "aaaaa"
+  const nextPageToken = "aaaaa";
   const orderBy = "HIGHEST_CURRENT_OFFER";
-  
 
   // const [isQueryParsed] = useURLFilter(slug!);
   const test_isQueryParsed = false;
@@ -75,7 +112,11 @@ export function Collection() {
   // const dispatch = useDispatch();
   const [gridColsValue, setGridColsValue] = useState(1);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (slug) getCollectionData(slug);
+  }, [slug]);
+
+  useEffect(() => {
     if (
       test_isQueryParsed &&
       filterIndex > 0 &&
@@ -86,7 +127,7 @@ export function Collection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterIndex, test_isQueryParsed, nextPageToken, slug]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (test_isQueryParsed) {
       // dispatch({ type: "ResetCollectionInfo" });
     }
@@ -94,7 +135,7 @@ export function Collection() {
   }, [slug]);
 
   // Listener that calculated how much items will be in single collection row
-  React.useEffect(() => {
+  useEffect(() => {
     const collectionDivElement = document.getElementById("collection-wrapper");
     setGridColsValue(
       Math.floor(Number(collectionDivElement?.offsetWidth) / 280)
@@ -119,24 +160,24 @@ export function Collection() {
   return (
     <Layout footer={false}>
       <div className="flex flex-col overflow-x-hidden w-full">
-        <MobileFilters
+        {/* <MobileFilters
           mobileFiltersOpen={mobileFiltersOpen}
           setMobileFiltersOpen={setMobileFiltersOpen}
           idOrSlug={slug!}
-        />
+        /> */}
 
-        <CollectionHeader collectionID={slug!} />
+        <CollectionHeader collection={collection} />
         <div className="flex flex-1 sm:px-6 lg:px-8">
-          <Filters idOrSlug={slug!} />
+          {/* <Filters idOrSlug={slug!} /> */}
           <main className="flex-1 px-4 sm:px-6 lg:px-8 pt-6 pb-6">
             <h2 id="products-heading" className="sr-only">
               Items
             </h2>
 
-            <FilterBar
+            {/* <FilterBar
               setMobileFiltersOpen={setMobileFiltersOpen}
               onClickSearch={() => setSearchOpen(true)}
-            />
+            /> */}
             {expectedTokenCount > 0 && !progress && (
               <h3 className="text-xs font-semibold tracking-wide mb-4">
                 {expectedTokenCount} Items
@@ -162,7 +203,7 @@ export function Collection() {
                     : "gap-y-10 gap-x-6 xl:gap-x-8"
                 )}
               >
-                {tokenList.map((product:any) => (
+                {tokenList.map((product: any) => (
                   <SimpleToken
                     key={product.mintId}
                     {...product}
@@ -170,7 +211,7 @@ export function Collection() {
                     size={
                       TwitterStyleCollections.includes(slug!)
                         ? "twitter"
-                        : "rect" /*TODO: remove custom logic for skyline */
+                        : "rect"
                     }
                     resize={
                       ObjectContainCollections.includes(slug!)
@@ -212,13 +253,13 @@ export function Collection() {
             )}
           </main>
         </div>
-        {collectionMeta?.collection?.id && (
+        {/* {collectionMeta?.collection?.id && (
           <SearchModal
             collectionKey={collectionMeta?.collection?.id}
             open={searchOpen}
             onClose={() => setSearchOpen(false)}
           />
-        )}
+        )} */}
       </div>
     </Layout>
   );

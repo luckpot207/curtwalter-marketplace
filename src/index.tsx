@@ -24,6 +24,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { MarketplaceProvider } from "./context/MarketplaceProvider";
+import { Toaster } from "react-hot-toast";
 
 
 function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
@@ -43,6 +44,7 @@ function App() {
       >
         <WalletProvider>
           <MarketplaceProvider>
+            <Toaster />
             <Router>
               <Routes>
                 {/* <Route path="/faq">

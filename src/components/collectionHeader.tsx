@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import { useSelector } from "../api/store";
 import { lamportsToSOL } from "../utils/sol";
 import { Spinner } from "./spiners";
@@ -9,6 +9,9 @@ import { Helmet } from "react-helmet";
 import { classNames } from "../utils/clsx";
 import { TwitterIcon, HowRareIsIcon, DiscordIcon, WebsiteIcon } from "./icons";
 import Tooltip from "./tooltip";
+import { NftCollection as INftCollection } from "../types/nft";
+import Banner from "../assets/banner.png";
+import Nft from "../assets/nfts/5852.jpg";
 
 export function nFormatter(num: number, digits: number) {
   const lookup = [
@@ -172,8 +175,11 @@ function LinksGroup(props: {
   );
 }
 
-export default function CollectionHeader(props: { collectionID: string }) {
-  const [collectionMeta, isLoading] = useCollection(props.collectionID);
+export default function CollectionHeader(props: {
+  collection: INftCollection | null;
+}) {
+  // const [collectionMeta, isLoading] = useCollection(props.collectionID);
+  const isLoading = false;
   // const floorPrice = useSelector(
   //   (data) => data.floorPrices[props.collectionID]
   // );
@@ -182,54 +188,47 @@ export default function CollectionHeader(props: { collectionID: string }) {
   const stats = [
     {
       name: "items",
-      stat: isLoading
-        ? 0
-        : nFormatter(collectionMeta?.collection?.total_items ?? 10000, 1),
+      stat: isLoading ? 0 : nFormatter(10000, 1),
+      // : nFormatter(collectionMeta?.collection?.total_items ?? 10000, 1),
     },
     {
       name: "owners",
-      stat: isLoading
-        ? 0
-        : nFormatter(collectionMeta?.collection?.ownerCount ?? 0, 1),
+      stat: isLoading ? 0 : nFormatter(0, 1),
+      // : nFormatter(collectionMeta?.collection?.ownerCount ?? 0, 1),
     },
     {
       name: "floor",
-      stat: isLoading
-        ? 0
-        : "◎" + lamportsToSOL(floorPrice ?? collectionMeta?.floorPrice ?? 0),
+      stat: isLoading ? 0 : "◎" + lamportsToSOL(0),
+      // : "◎" + lamportsToSOL(floorPrice ?? collectionMeta?.floorPrice ?? 0),
     },
     {
       name: "volume",
-      stat: isLoading
-        ? 0
-        : "◎" +
-          nFormatter(lamportsToSOL(collectionMeta?.collection?.volume ?? 0), 1),
+      stat: isLoading ? 0 : "◎" + nFormatter(0, 1),
+      // nFormatter(lamportsToSOL(collectionMeta?.collection?.volume ?? 0), 1),
     },
   ];
 
   return (
     <div>
       <Helmet>
-        <title>
-          Alpha.art | {collectionMeta?.collection?.title ?? props.collectionID}
-        </title>
+        <title>Curt | {props.collection?.name ?? "Undefined"}</title>
       </Helmet>
       <img
-        src={collectionMeta?.collection?.banner}
+        src={Banner}
         alt=""
         className="w-full h-52 object-center object-cover"
       />
       <div className="flex flex-col items-center justify-center -mt-24 relative">
-        <Link to={"/collection/" + props.collectionID}>
-          <Image src={collectionMeta?.collection?.thumbnail!} alt="" />
+        <Link to={"/collection/" + props.collection?.nftContractAddr}>
+          <Image src={Nft} alt="" />
         </Link>
-        <LinksGroup
+        {/* <LinksGroup
           slug={props.collectionID}
           className="hidden sm:inline-flex absolute right-16 top-28"
           links={collectionMeta?.collection?.links ?? []}
-        />
+        /> */}
         <h1 className="text-4xl font-extrabold tracking-tight mt-4">
-          {collectionMeta?.collection?.title}
+          {props.collection?.name}
         </h1>
         <dl className="mt-5 grid grid-cols-4 gap-1 sm:gap-4">
           {stats.map((item) => (
@@ -253,13 +252,13 @@ export default function CollectionHeader(props: { collectionID: string }) {
           ))}
         </dl>
         <h3 className="text-lg ml-2 mr-2 font-normal text-center tracking-tight mt-4 max-w-2xl">
-          {collectionMeta?.collection?.description}
+          {props.collection?.description}
         </h3>
-        <LinksGroup
+        {/* <LinksGroup
           slug={props.collectionID}
           className="inline-flex sm:hidden mt-2"
           links={collectionMeta?.collection?.links ?? []}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export function Image(props: {
   resize: "contain" | "cover";
   rounded?: boolean;
 }) {
-    const rounded = props.rounded ? ' rounded-2xl': ''
+  const rounded = props.rounded ? " rounded-2xl" : "";
 
   //https://assets.alpha.art/opt/c/d/cd5215107005896ce88e2b0cc3ce3b9b9340250b/original.png
   if (props.src.startsWith("https://assets.alpha.art/opt/")) {
@@ -28,11 +28,12 @@ export function Image(props: {
         />
         <img
           loading="lazy"
-          src={[...parts, "340.png"].join("/")}
-          srcSet={[
-            [...parts, "340.png"].join("/"),
-            [...parts, "680.png 2x"].join("/"),
-          ].join(", ")}
+          src={props.src}
+          // src={[...parts, "340.png"].join("/")}
+          // srcSet={[
+          //   [...parts, "340.png"].join("/"),
+          //   [...parts, "680.png 2x"].join("/"),
+          // ].join(", ")}
           alt={props.alt}
           className={
             props.resize === "contain"
@@ -105,32 +106,20 @@ export default function Item(
   const { size = "rect", resize = "cover" } = props;
   let rightPricing = null;
   if (props.listedForSale) {
-    const price = (
-      <h3 className="text-base">
-        ◎ {lamportsToSOL(props.price)}
-      </h3>
-    );
+    const price = <h3 className="text-base">◎ {lamportsToSOL(props.price)}</h3>;
     let second = null;
     if (props.showField === "offerPrice" && (props.offerPrice ?? -1) > 0) {
       second = (
         <div className="flex items-center">
-          <p className="text-xs text-right font-light mr-1">
-            Max Offer
-          </p>
-          <h3 className="text-sm">
-            ◎{lamportsToSOL(props.offerPrice)}
-          </h3>
+          <p className="text-xs text-right font-light mr-1">Max Offer</p>
+          <h3 className="text-sm">◎{lamportsToSOL(props.offerPrice)}</h3>
         </div>
       );
     } else if (props.showField === "lastPrice" && (props.last ?? -1) > 0) {
       second = (
         <div className="flex items-center">
-          <p className="text-xs text-right font-light  mr-1">
-            Last
-          </p>
-          <h3 className="text-sm">
-            ◎{lamportsToSOL(props.last)}
-          </h3>
+          <p className="text-xs text-right font-light  mr-1">Last</p>
+          <h3 className="text-sm">◎{lamportsToSOL(props.last)}</h3>
         </div>
       );
     }
@@ -141,9 +130,7 @@ export default function Item(
     rightPricing = (
       <div className="flex flex-col items-end">
         <p className="text-xs text-right font-light">Max Offer</p>
-        <h3 className="text-xs">
-          ◎{lamportsToSOL(props.offerPrice)}
-        </h3>
+        <h3 className="text-xs">◎{lamportsToSOL(props.offerPrice)}</h3>
       </div>
     );
   } else if (props.last) {
