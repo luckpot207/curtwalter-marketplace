@@ -8,6 +8,7 @@ import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
 import { Explore } from "./pages/explore";
+import { Collection } from "./pages/collection/[slug]";
 import { LaunchPad } from "./pages/launchpad";
 import {
   ExternalProvider,
@@ -74,6 +75,7 @@ function App() {
               </Route>  */}
                 <Route path="/" element={<Index />} />
                 <Route path="/explore" element={<Explore />} />
+                <Route path="/collection/:slug" element={<Collection />} />
                 <Route path="/launch" element={<LaunchPad loader={false} />} />
               </Routes>
             </Router>

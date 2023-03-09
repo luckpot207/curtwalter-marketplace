@@ -30,6 +30,7 @@ const CategoryData_ = {
   thumbnail: MoonkeesNft,
 };
 
+<<<<<<< HEAD
 const collectionData = {
   id: "1",
   slug: "my slug",
@@ -40,6 +41,18 @@ const collectionData = {
   listedCount: 26,
   floorPrice: "floorPrice",
 };
+=======
+const CollectionData_ = {
+    id: "1",
+    slug: "my_slug",
+    title: "my title",
+    thumbnail: MoonkeesNft,
+    totalItems: 487,
+    addedAt: "my_add",
+    listedCount: 26,
+    floorPrice: "floorPrice",
+}
+>>>>>>> 2689cb003b9f8d47025b638e2622a80a8b1928be
 
 export function Explore() {
   const {
