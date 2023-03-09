@@ -127,7 +127,7 @@ export function Explore() {
     const collections: BaseCollectionData[] = allNftCollections.map(
       (collection, idx) => ({
         id: idx.toString(),
-        slug: "string",
+        slug: collection.nftContractAddr,
         title: collection.name,
         thumbnail:
           collection.nftsInCollection.length > 0
