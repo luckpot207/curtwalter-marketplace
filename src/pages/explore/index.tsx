@@ -23,37 +23,6 @@ import { useAccount } from "wagmi";
 import { Marketplace } from "../../typechain-types";
 import { decodeMetadataUri, getIpfsFileUri } from "../../utils/nft";
 
-const CategoryData_ = {
-  id: "1",
-  name: "my category",
-  volume: "my volume",
-  thumbnail: MoonkeesNft,
-};
-
-<<<<<<< HEAD
-const collectionData = {
-  id: "1",
-  slug: "my slug",
-  title: "my title",
-  thumbnail: MoonkeesNft,
-  totalItems: 487,
-  addedAt: "my add",
-  listedCount: 26,
-  floorPrice: "floorPrice",
-};
-=======
-const CollectionData_ = {
-    id: "1",
-    slug: "my_slug",
-    title: "my title",
-    thumbnail: MoonkeesNft,
-    totalItems: 487,
-    addedAt: "my_add",
-    listedCount: 26,
-    floorPrice: "floorPrice",
-}
->>>>>>> 2689cb003b9f8d47025b638e2622a80a8b1928be
-
 export function Explore() {
   const {
     allNftCollections,
