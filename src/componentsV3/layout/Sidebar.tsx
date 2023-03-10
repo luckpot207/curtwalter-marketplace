@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -27,6 +27,23 @@ export function Sidebar() {
               </svg>
               <span className="ml-3">Dashboard</span>
             </button>
+          </li>
+          <li>
+            <a
+              href="/explore"
+              className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <svg
+                aria-hidden="true"
+                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M20,13a5,5,0,0,0-2-4V2H2V22H18V17.41l3.29,3.29,1.41-1.41-3.54-3.54A5,5,0,0,0,20,13Zm-2,0a3,3,0,1,1-3-3A3,3,0,0,1,18,13ZM4,20V4H16V8.1A5,5,0,0,0,11,10v0H6v2h4.1a5,5,0,0,0,0,2H6v2h5v0a5,5,0,0,0,5,1.93V20Z"/><rect height="2" width="4" x="6" y="6"/>
+              </svg>
+              <span className="flex-1 ml-3 whitespace-nowrap">Explore</span>
+            </a>
           </li>
           <li>
             <button
@@ -106,7 +123,7 @@ export function Sidebar() {
                 </button>
               </li>
               <li>
-                <button onClick={() => {navigate('/launch')}} className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
+                <button onClick={() => { navigate('/launch') }} className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
                   Apply for launchpad
                 </button>
               </li>
