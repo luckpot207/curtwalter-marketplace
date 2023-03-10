@@ -71,7 +71,8 @@ export function LaunchPad(props: {
                     Apply for Launchpad
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Project Name
                     </p>
                     <input
@@ -85,7 +86,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Description
                     </p>
                     <textarea
@@ -98,7 +100,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Team
                     </p>
                     <input
@@ -112,7 +115,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Supply
                     </p>
                     <input
@@ -126,7 +130,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Price
                     </p>
                     <input
@@ -140,7 +145,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       MintDate
                     </p>
                     <input
@@ -151,14 +157,15 @@ export function LaunchPad(props: {
                                 text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
                       // value={inputs.mintDate || (new Date()).toISOString().split('T')[0]}
                       defaultValue={(new Date()).toISOString().split('T')[0]}
-                      min={(new Date()).toISOString().split('T')[0]} 
+                      min={(new Date()).toISOString().split('T')[0]}
                       max="2030-01-01"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
-                      Youtube
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
+                      Youtubu
                     </p>
                     <input
                       type="text"
@@ -171,7 +178,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Twitter
                     </p>
                     <input
@@ -185,7 +193,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Facebook
                     </p>
                     <input
@@ -199,7 +208,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Linkedin
                     </p>
                     <input
@@ -213,7 +223,8 @@ export function LaunchPad(props: {
                     />
                   </div>
                   <div className="relative mb-4">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
+                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+
                       Instagram
                     </p>
                     <input

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import { OfferAndPubKey } from "../api/app/instructions";
 import SimpleToken, { ItemShowField } from "../components/simpleToken";
@@ -42,14 +42,17 @@ export function TokenListing(props: {
     showField,
   } = props;
   const [cancelOffer, setCancelOffer] =
-    React.useState<OfferAndPubKey | undefined>(undefined);
-
+    useState<OfferAndPubKey | undefined>(undefined);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [cost, handleCost] = useState<number>(0);
   const openCancelOffer = (token: TokenAPISimple) => {
     const offer = props.offers?.find(
       (o) => o.offer.mintId.toBase58() === token.mintId
     );
     setCancelOffer(offer);
   };
+
+  
 
   if (tokens.length > 0) {
     if (collections) {
@@ -85,6 +88,7 @@ export function TokenListing(props: {
                       <div>
                         <SimpleToken
                           key={product.mintId}
+                          // setOpenModal={() => setOpenModal(true)}
                           {...product}
                           showField={showField}
                         />
@@ -100,6 +104,7 @@ export function TokenListing(props: {
                     ) : (
                       <SimpleToken
                         key={product.mintId}
+                        // setOpenModal={() => setOpenModal(true)}
                         {...product}
                         showField={showField}
                       />
@@ -123,6 +128,9 @@ export function TokenListing(props: {
             />
           ))}
         </div>
+        
+
+
       </>
     );
   }

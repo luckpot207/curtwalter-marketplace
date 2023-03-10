@@ -1,7 +1,7 @@
 import { TokenAPISimple } from "../data/marketplace.pb";
 import { lamportsToSOL } from "../utils/sol";
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 
 export type ItemShowField = "lastPrice" | "offerPrice";
 
@@ -109,6 +109,13 @@ export default function Item(
     aProps?: React.AnchorHTMLAttributes<HTMLAnchorElement>;
   }
 ) {
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [price, handleprice] = useState<number>(0);
+  const handleChange = (e: any) => {
+    handleprice(e.target.value);
+  }
+
   const { size = "rect", resize = "cover" } = props;
   let rightPricing = null;
   if (props.listedForSale) {
@@ -169,13 +176,69 @@ export default function Item(
         {rightPricing}
       </div>
       <div className="flex justify-between mt-4">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          onClick={() => { setOpenModal(true) }}
+        >
           Sell
         </button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
           Auction
         </button>
       </div>
+
+      {openModal ?
+        <div className="main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster background: rgba(0,0,0,.7)">
+          <div
+            className="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div className="modal-content py-4 text-left px-6 dark:bg-zinc-800  dark:purple-border-hover gray-border-hover">
+              {/* <!--Title--> */}
+              <div className="flex justify-between items-center pb-3">
+                <p className="text-2xl font-bold">Selling Price</p>
+                <div
+                  className="modal-close cursor-pointer z-50"
+                  onClick={() => setOpenModal(false)}
+                >
+                  <svg className="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                    viewBox="0 0 18 18">
+                    <path
+                      d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                    </path>
+                  </svg>
+                </div>
+              </div>
+              {/* <!--Body--> */}
+              <div className={`my-5 `}>
+                <div className="relative mb-4 ">
+                  <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+                    Price
+                  </p>
+                  <input
+                    type="number"
+                    name="price"
+                    className="border placeholder-gray-400 focus:outline-none 
+                               w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 
+                                text-base block bg-white border-gray-300 rounded-lg dark:bg-transparent "
+                    value={price || 0}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              {/* <!--Footer--> */}
+              <div className="flex justify-end pt-2">
+                <button
+                  onClick={() => setOpenModal(false)}
+                  className="focus:outline-none px-4 w-[80px] bg-teal-500 p-3 mr-3 rounded-lg text-white hover:bg-teal-400">Sell</button>
+
+                <button
+                  onClick={() => setOpenModal(false)}
+                  className="focus:outline-none modal-close w-[80px] px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div> :
+        ""
+      }
       {/* </Link> */}
     </div>
   );
