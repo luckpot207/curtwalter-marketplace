@@ -1,5 +1,5 @@
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 // import { useSelector } from "../../api/store";
 // import { getTokenList } from "../../api/api";
 import { addNotification } from "../../utils/alert";
@@ -179,7 +179,7 @@ function useProfileTabs(isCurrentUser: boolean): [Tab, (tab: Tab) => void] {
     _selectTab(tab);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const query = new URLSearchParams(location.search);
     const queryTab = query.get("tab");
     const validTab = tabs.find((t) => t.key === queryTab);
@@ -208,54 +208,56 @@ export function User() {
     offerAccounts: offers,
     ready,
   } = useAccounts(pubkey!);
-  const [tokenList, setTokenList] = React.useState<TokenAPISimple[]>([]);
-  const [collections, setCollections] = React.useState<Collection[]>([]);
-  const [offerTokenList, setOfferTokenList] = React.useState<TokenAPISimple[]>([]);
-  const [receivedOfferTokenList, setReceivedOfferTokenList] = React.useState<TokenAPISimple[]>([]);
-  const [progress, setProgress] = React.useState(true);
+  const [tokenList, setTokenList] = useState<TokenAPISimple[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [offerTokenList, setOfferTokenList] = useState<TokenAPISimple[]>([]);
+  const [receivedOfferTokenList, setReceivedOfferTokenList] = useState<TokenAPISimple[]>([]);
+  const [progress, setProgress] = useState(true);
 
   // const isCurrentUser = pubkey === wallet?.publicKey?.toBase58();
   const isCurrentUser = true;
   const [tab, selectTab] = useProfileTabs(isCurrentUser);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setProgress(true);
     setTokenList([]);
     setOfferTokenList([]);
     setReceivedOfferTokenList([]);
   }, [pubkey]);
 
-  React.useEffect(() => {
-    if (!ready) {
-      return;
-    }
-    const ownedByUser = [...userNFTS];
-    const nfts = [...userNFTS];
+  useEffect(() => {
+    // if (!ready) {
+    //   return;
+    // }
+    // const ownedByUser = [...userNFTS];
+    // const nfts = [...userNFTS];
+    // const ownedByUser = test_getListTokens;
+    const nfts = test_getListTokens;
     const offerMints: string[] = [];
-    for (const e of escrows) {
-      const m = e.escrow.mintId.toBase58();
-      nfts.push(m);
-      ownedByUser.push(m);
-    }
-    for (const e of offers) {
-      const m = e.offer.mintId.toBase58();
-      nfts.push(m);
-      offerMints.push(m);
-    }
-    if (nfts.length > 0) {
+    // for (const e of escrows) {
+    //   const m = e.escrow.mintId.toBase58();
+    //   nfts.push(m);
+    //   ownedByUser.push(m);
+    // }
+    // for (const e of offers) {
+    //   const m = e.offer.mintId.toBase58();
+    //   nfts.push(m);
+    //   offerMints.push(m);
+    // }
+    // if (nfts.length > 0) {
       setProgress(true);
       // getTokenList(pubkey, nfts)
       // .then(
       // (res:any) => {
-      test_getListTokens.tokens
-        ?.sort((a: any, b: any) => Number(b.last ?? 0) - Number(a.last ?? 0))
-        .sort(comparePrices);
+      // test_getListTokens.tokens
+      //   ?.sort((a: any, b: any) => Number(b.last ?? 0) - Number(a.last ?? 0))
+      //   .sort(comparePrices);
 
-      const ownedTokens =
-        test_getListTokens.tokens?.filter((t: any) => ownedByUser.includes(t.mintId!)) ?? [];
-
+      const ownedTokens = nfts.tokens;
+        // nfts.tokens?.filter((t: any) => ownedByUser.includes(t.mintId!)) ?? [];
+      console.log("ownedTokens::", ownedTokens);
       setCollections(
-        (test_getListTokens.collections || []).sort(
+        (nfts.collections || []).sort(
           (a: any, b: any) => a.title!.localeCompare(b.title!) || 0
         )
       );
@@ -279,12 +281,12 @@ export function User() {
       //   console.error(err);
       //   setProgress(false);
       // });
-    } else {
-      setProgress(false);
-      setTokenList([]);
-      setOfferTokenList([]);
-      setReceivedOfferTokenList([]);
-    }
+    // } else {
+    //   setProgress(false);
+    //   setTokenList([]);
+    //   setOfferTokenList([]);
+    //   setReceivedOfferTokenList([]);
+    // }
   }, [ready, userNFTS, escrows, offers]);
 
   const getCurrentTabTitle = () => {
