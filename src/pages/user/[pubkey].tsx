@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 // import { useSelector } from "../../api/store";
 // import { getTokenList } from "../../api/api";
 import { addNotification } from "../../utils/alert";
@@ -226,7 +226,36 @@ export function User() {
   const isCurrentUser = true;
   const [tab, selectTab] = useProfileTabs(isCurrentUser);
 
-  useEffect(() => {
+  const getNfts = async (address: string) => {
+    const options = {
+      method: "GET",
+      url: `https://deep-index.moralis.io/api/v2/${address}/collection`,
+      params: {
+        chain: "mumbai",
+        format: "decimal",
+        limit: "100",
+        normalizeMetadata: "false",
+      },
+      headers: {
+        accept: "application/json",
+        "X-API-Key":
+          "ZKmwgYmReVGcSkazjLiYcQlg8V4wiRHtrdy6jO3GP0W4w84zM4GGbeuuGsydK9IA", //Private-key
+      },
+    };
+
+    try {
+      const response = await axios.request(options);
+      const nftResults = response.data.result;
+      const metadataResults = nftResults.filter((n: any) => n.metadata);
+      console.log(">>>>", metadataResults);
+      return metadataResults;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (pubkey) getNfts(pubkey);
     setProgress(true);
     setTokenList([]);
     setOfferTokenList([]);
@@ -235,12 +264,12 @@ export function User() {
 
   useEffect(() => {
     // if (!ready) {
+    const nfts = test_getListTokens;
     //   return;
     // }
     // const ownedByUser = [...userNFTS];
     // const nfts = [...userNFTS];
     // const ownedByUser = test_getListTokens;
-    const nfts = test_getListTokens;
     const offerMints: string[] = [];
     // for (const e of escrows) {
     //   const m = e.escrow.mintId.toBase58();
@@ -302,7 +331,7 @@ export function User() {
     //   setOfferTokenList([]);
     //   setReceivedOfferTokenList([]);
     // }
-  }, [ready, userNFTS, escrows, offers]);
+  }, []);
 
   const getCurrentTabTitle = () => {
     const tt = tabs.find((t) => t.key === tab)?.title;
