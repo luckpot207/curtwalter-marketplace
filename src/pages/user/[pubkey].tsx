@@ -229,7 +229,7 @@ export function User() {
   const getNfts = async (address: string) => {
     const options = {
       method: "GET",
-      url: `https://deep-index.moralis.io/api/v2/${address}/collection`,
+      url: `https://deep-index.moralis.io/api/v2/${address}/nft`,
       params: {
         chain: "mumbai",
         format: "decimal",
@@ -247,7 +247,18 @@ export function User() {
       const response = await axios.request(options);
       const nftResults = response.data.result;
       const metadataResults = nftResults.filter((n: any) => n.metadata);
-      console.log(">>>>", metadataResults);
+      let tokens: TokenAPISimple[] = metadataResults.map((data: any) => ({
+        mintId: data.token_id,
+        title: data.name,
+        image: JSON.parse(data.metadata ?? "").image ?? "",
+        listedForSale: false,
+        collectionId: data.token_address,
+      }));
+      setTokenList(tokens);
+      // metadataResults.map((data: any) => {
+      //   console.log(">>>>", JSON.parse(data.metadata ?? "").image);
+      // });
+
       return metadataResults;
     } catch (error) {
       console.error(error);
@@ -263,47 +274,25 @@ export function User() {
   }, [pubkey]);
 
   useEffect(() => {
-    // if (!ready) {
     const nfts = test_getListTokens;
-    //   return;
-    // }
-    // const ownedByUser = [...userNFTS];
-    // const nfts = [...userNFTS];
-    // const ownedByUser = test_getListTokens;
+
     const offerMints: string[] = [];
-    // for (const e of escrows) {
-    //   const m = e.escrow.mintId.toBase58();
-    //   nfts.push(m);
-    //   ownedByUser.push(m);
-    // }
-    // for (const e of offers) {
-    //   const m = e.offer.mintId.toBase58();
-    //   nfts.push(m);
-    //   offerMints.push(m);
-    // }
-    // if (nfts.length > 0) {
+
     setProgress(true);
-    // getTokenList(pubkey, nfts)
-    // .then(
-    // (res:any) => {
+
     test_getListTokens.tokens
       ?.sort((a: any, b: any) => Number(b.last ?? 0) - Number(a.last ?? 0))
       .sort(comparePrices);
 
-    // const ownedTokens =
-    //   test_getListTokens.tokens?.filter((t: any) =>
-    //     ownedByUser.includes(t.mintId!)
-    //   ) ?? [];
-
     const ownedTokens = nfts.tokens;
-    // nfts.tokens?.filter((t: any) => ownedByUser.includes(t.mintId!)) ?? [];
+
     console.log("ownedTokens::", ownedTokens);
     setCollections(
       (nfts.collections || []).sort(
         (a: any, b: any) => a.title!.localeCompare(b.title!) || 0
       )
     );
-    setTokenList(ownedTokens);
+    // setTokenList(ownedTokens);
 
     setOfferTokenList(
       test_getListTokens.tokens?.filter((t: any) =>
@@ -556,7 +545,7 @@ export function User() {
                       <>
                         {tab === "nfts" && (
                           <TokenListing
-                            collections={collections}
+                            // collections={collections}
                             tokens={tokenList}
                             title={
                               <>

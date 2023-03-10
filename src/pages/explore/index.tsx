@@ -124,6 +124,7 @@ export function Explore() {
 
   useEffect(() => {
     setCollectionListNextPage(false);
+    // console.log("allnftCollections ", allNftCollections);
     const collections: BaseCollectionData[] = allNftCollections.map(
       (collection, idx) => ({
         id: idx.toString(),

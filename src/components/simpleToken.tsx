@@ -14,8 +14,14 @@ export function Image(props: {
   const rounded = props.rounded ? " rounded-2xl" : "";
 
   //https://assets.alpha.art/opt/c/d/cd5215107005896ce88e2b0cc3ce3b9b9340250b/original.png
-  if (props.src.startsWith("https://assets.alpha.art/opt/")) {
+  if (props.src.startsWith("ipfs://")) {
     const pp = props.src.split("/");
+    const cid = pp.slice(0, pp.length)[2];
+    const filename = pp.slice(0, pp.length)[3];
+    const hostname = "https://ipfs.io/ipfs/";
+    const sublink = ".ipfs.nftstorage.link/";
+    const src = hostname + cid + "/" + filename;
+    console.log(src);
     const parts = pp.slice(0, pp.length - 1);
     return (
       <picture>
@@ -28,7 +34,7 @@ export function Image(props: {
         />
         <img
           loading="lazy"
-          src={props.src}
+          src={src}
           // src={[...parts, "340.png"].join("/")}
           // srcSet={[
           //   [...parts, "340.png"].join("/"),
