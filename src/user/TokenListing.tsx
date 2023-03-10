@@ -14,7 +14,7 @@ export interface OfferAndPubKey {
     state: number;
     initializerPubkey: PublicKey;
     mintId: PublicKey;
-    price: number ;
+    price: number;
     expiresAt: number;
     tokens: PublicKey[];
   };
@@ -41,9 +41,8 @@ export function TokenListing(props: {
     collections,
     showField,
   } = props;
-  const [cancelOffer, setCancelOffer] = React.useState<
-    OfferAndPubKey | undefined
-  >(undefined);
+  const [cancelOffer, setCancelOffer] =
+    React.useState<OfferAndPubKey | undefined>(undefined);
 
   const openCancelOffer = (token: TokenAPISimple) => {
     const offer = props.offers?.find(
@@ -116,6 +115,7 @@ export function TokenListing(props: {
       <>
         <h2 className="text-2xl text-left mb-8">{title}</h2>
         <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 md:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+          asdfasd
           {props.tokens.map((product) => (
             <SimpleToken
               key={product.mintId}

@@ -1,4 +1,3 @@
-
 import React, { Fragment, useState, useEffect } from "react";
 // import { useSelector } from "../../api/store";
 // import { getTokenList } from "../../api/api";
@@ -15,7 +14,7 @@ import {
   BiSelection as SelectorIcon,
   BiShoppingBag as ShoppingBagIcon,
   BiTrendingUp as TrendingUpIcon,
-  BiUserCircle as UserCircleIcon
+  BiUserCircle as UserCircleIcon,
 } from "react-icons/bi";
 import { classNames } from "../../utils/clsx";
 import { TradingHistory } from "../../components/TradingHistory";
@@ -27,6 +26,8 @@ import Profile from "../../user/Profile";
 import { Layout } from "../../componentsV3/layout/Layout";
 // import { useWallet } from "@solana/wallet-adapter-react";
 import MoonkeesNft from "../../assets/nfts/moonkes.png";
+import axios from "axios";
+import { useAccount } from "wagmi";
 
 const comparePrices = (a: TokenAPISimple, b: TokenAPISimple) =>
   (Number(b.price) || 0) - (Number(a.price) || 0);
@@ -43,7 +44,7 @@ const test_getListTokens = {
       price: 39999,
       offerPrice: 30000,
       last: 400,
-      collectionId: "1"
+      collectionId: "1",
     },
     {
       mintId: "2",
@@ -53,8 +54,9 @@ const test_getListTokens = {
       price: 39999,
       offerPrice: 30000,
       last: 400,
-      collectionId: "1"
-    }, {
+      collectionId: "1",
+    },
+    {
       mintId: "3",
       title: "Sport_NFT",
       image: MoonkeesNft,
@@ -62,8 +64,9 @@ const test_getListTokens = {
       price: 39999,
       offerPrice: 30000,
       last: 400,
-      collectionId: "1"
-    }, {
+      collectionId: "1",
+    },
+    {
       mintId: "4",
       title: "Smutt_NFT",
       image: MoonkeesNft,
@@ -71,8 +74,9 @@ const test_getListTokens = {
       price: 39999,
       offerPrice: 30000,
       last: 400,
-      collectionId: "2"
-    }, {
+      collectionId: "2",
+    },
+    {
       mintId: "5",
       title: "GSTAR_NFT",
       image: MoonkeesNft,
@@ -80,7 +84,7 @@ const test_getListTokens = {
       price: 39999,
       offerPrice: 30000,
       last: 400,
-      collectionId: "2"
+      collectionId: "2",
     },
   ],
   collections: [
@@ -103,7 +107,7 @@ const test_getListTokens = {
       alternativeAuthorities: ["favor", "John"],
       collaborators: ["Ted", "Paul"],
       addedAt: "1678393314524",
-      all_sales: 32
+      all_sales: 32,
     },
     {
       id: "2",
@@ -123,10 +127,10 @@ const test_getListTokens = {
       alternativeAuthorities: ["favor", "John"],
       collaborators: ["Ted", "Paul"],
       addedAt: "1678393314524",
-      all_sales: 32
-    }
-  ]
-}
+      all_sales: 32,
+    },
+  ],
+};
 
 const test_user = {
   pubkey: "0xEe7bEa1aCA01D0b2EB3F30C2785A2d7025DbdD6b",
@@ -157,8 +161,7 @@ const test_user = {
 const tabs = [
   {
     key: "nfts",
-    title: (isCurrentUser: boolean) =>
-      isCurrentUser ? "My Wallet" : "Wallet",
+    title: (isCurrentUser: boolean) => (isCurrentUser ? "My Wallet" : "Wallet"),
   },
   {
     key: "offersMade",
@@ -201,6 +204,7 @@ export function User() {
   // const { user } = useSelector((data) => ({
   //   user: data.user,
   // }));
+  const [nfts, setNfts] = useState();
   const user = test_user;
   const {
     userNFTS,
@@ -208,17 +212,50 @@ export function User() {
     offerAccounts: offers,
     ready,
   } = useAccounts(pubkey!);
-  const [tokenList, setTokenList] = useState<TokenAPISimple[]>([]);
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [offerTokenList, setOfferTokenList] = useState<TokenAPISimple[]>([]);
-  const [receivedOfferTokenList, setReceivedOfferTokenList] = useState<TokenAPISimple[]>([]);
-  const [progress, setProgress] = useState(true);
+  const [tokenList, setTokenList] = React.useState<TokenAPISimple[]>([]);
+  const [collections, setCollections] = React.useState<Collection[]>([]);
+  const [offerTokenList, setOfferTokenList] = React.useState<TokenAPISimple[]>(
+    []
+  );
+  const [receivedOfferTokenList, setReceivedOfferTokenList] = React.useState<
+    TokenAPISimple[]
+  >([]);
+  const [progress, setProgress] = React.useState(true);
 
   // const isCurrentUser = pubkey === wallet?.publicKey?.toBase58();
   const isCurrentUser = true;
   const [tab, selectTab] = useProfileTabs(isCurrentUser);
 
-  useEffect(() => {
+  const getNfts = async (address: string) => {
+    const options = {
+      method: "GET",
+      url: `https://deep-index.moralis.io/api/v2/${address}/collection`,
+      params: {
+        chain: "mumbai",
+        format: "decimal",
+        limit: "100",
+        normalizeMetadata: "false",
+      },
+      headers: {
+        accept: "application/json",
+        "X-API-Key":
+          "ZKmwgYmReVGcSkazjLiYcQlg8V4wiRHtrdy6jO3GP0W4w84zM4GGbeuuGsydK9IA", //Private-key
+      },
+    };
+
+    try {
+      const response = await axios.request(options);
+      const nftResults = response.data.result;
+      const metadataResults = nftResults.filter((n: any) => n.metadata);
+      console.log(">>>>", metadataResults);
+      return metadataResults;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (pubkey) getNfts(pubkey);
     setProgress(true);
     setTokenList([]);
     setOfferTokenList([]);
@@ -227,12 +264,12 @@ export function User() {
 
   useEffect(() => {
     // if (!ready) {
+    const nfts = test_getListTokens;
     //   return;
     // }
     // const ownedByUser = [...userNFTS];
     // const nfts = [...userNFTS];
     // const ownedByUser = test_getListTokens;
-    const nfts = test_getListTokens;
     const offerMints: string[] = [];
     // for (const e of escrows) {
     //   const m = e.escrow.mintId.toBase58();
@@ -245,49 +282,56 @@ export function User() {
     //   offerMints.push(m);
     // }
     // if (nfts.length > 0) {
-      setProgress(true);
-      // getTokenList(pubkey, nfts)
-      // .then(
-      // (res:any) => {
-      // test_getListTokens.tokens
-      //   ?.sort((a: any, b: any) => Number(b.last ?? 0) - Number(a.last ?? 0))
-      //   .sort(comparePrices);
+    setProgress(true);
+    // getTokenList(pubkey, nfts)
+    // .then(
+    // (res:any) => {
+    test_getListTokens.tokens
+      ?.sort((a: any, b: any) => Number(b.last ?? 0) - Number(a.last ?? 0))
+      .sort(comparePrices);
 
-      const ownedTokens = nfts.tokens;
-        // nfts.tokens?.filter((t: any) => ownedByUser.includes(t.mintId!)) ?? [];
-      console.log("ownedTokens::", ownedTokens);
-      setCollections(
-        (nfts.collections || []).sort(
-          (a: any, b: any) => a.title!.localeCompare(b.title!) || 0
-        )
-      );
-      setTokenList(ownedTokens);
+    // const ownedTokens =
+    //   test_getListTokens.tokens?.filter((t: any) =>
+    //     ownedByUser.includes(t.mintId!)
+    //   ) ?? [];
 
-      setOfferTokenList(
-        test_getListTokens.tokens?.filter((t: any) => offerMints.includes(t.mintId!)) ?? []
-      );
+    const ownedTokens = nfts.tokens;
+    // nfts.tokens?.filter((t: any) => ownedByUser.includes(t.mintId!)) ?? [];
+    console.log("ownedTokens::", ownedTokens);
+    setCollections(
+      (nfts.collections || []).sort(
+        (a: any, b: any) => a.title!.localeCompare(b.title!) || 0
+      )
+    );
+    setTokenList(ownedTokens);
 
-      setReceivedOfferTokenList(
-        ownedTokens?.filter((t: any) => !!t.offerPrice) ?? []
-      );
-      setProgress(false);
-      // }
-      // ).catch((err:any) => {
-      //   addNotification(
-      //     "Unable to fetch token list",
-      //     `${err.message}`,
-      //     "error"
-      //   );
-      //   console.error(err);
-      //   setProgress(false);
-      // });
+    setOfferTokenList(
+      test_getListTokens.tokens?.filter((t: any) =>
+        offerMints.includes(t.mintId!)
+      ) ?? []
+    );
+
+    setReceivedOfferTokenList(
+      ownedTokens?.filter((t: any) => !!t.offerPrice) ?? []
+    );
+    setProgress(false);
+    // }
+    // ).catch((err:any) => {
+    //   addNotification(
+    //     "Unable to fetch token list",
+    //     `${err.message}`,
+    //     "error"
+    //   );
+    //   console.error(err);
+    //   setProgress(false);
+    // });
     // } else {
     //   setProgress(false);
     //   setTokenList([]);
     //   setOfferTokenList([]);
     //   setReceivedOfferTokenList([]);
     // }
-  }, [ready, userNFTS, escrows, offers]);
+  }, []);
 
   const getCurrentTabTitle = () => {
     const tt = tabs.find((t) => t.key === tab)?.title;
@@ -303,10 +347,7 @@ export function User() {
         <div className="flex flex-row flex-1 h-screen w-full">
           <div className="flex flex-col border-0 sm:border-r  border-gray-200 dark:border-zinc-600 pt-8 pb-4">
             <div className="hidden sm:flex w-32 sm:w-48 lg:w-96 flex-grow flex-col">
-              <nav
-                className="flex-1 px-2 space-y-8"
-                aria-label="Sidebar"
-              >
+              <nav className="flex-1 px-2 space-y-8" aria-label="Sidebar">
                 <div className="space-y-1">
                   <div className="mb-5 ml-2 text-lg">
                     <AccountName pubkey={pubkey!} />
@@ -322,9 +363,7 @@ export function User() {
                   >
                     <ShoppingBagIcon
                       className={classNames(
-                        tab === "nfts"
-                          ? "text-gray-900 dark:text-white"
-                          : "",
+                        tab === "nfts" ? "text-gray-900 dark:text-white" : "",
                         "mr-3 flex-shrink-0 h-6 w-6"
                       )}
                       aria-hidden="true"
@@ -392,16 +431,16 @@ export function User() {
                     {"Activity"}
                   </button>
                   {isCurrentUser && (
-                      <button
-                        onClick={() => selectTab("settings")}
-                        className={classNames(
-                          tab === "settings"
-                            ? "bg-gray-100 text-gray-900 dark:bg-zinc-600 dark:text-white"
-                            : "",
-                          "group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full"
-                        )}
-                      >
-                        <>
+                    <button
+                      onClick={() => selectTab("settings")}
+                      className={classNames(
+                        tab === "settings"
+                          ? "bg-gray-100 text-gray-900 dark:bg-zinc-600 dark:text-white"
+                          : "",
+                        "group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full"
+                      )}
+                    >
+                      <>
                         <UserCircleIcon
                           className={classNames(
                             tab === "settings"
@@ -412,8 +451,8 @@ export function User() {
                           aria-hidden="true"
                         />
                         {tabs[4].title}
-                        </>
-                      </button>
+                      </>
+                    </button>
                   )}
                 </div>
               </nav>
@@ -484,9 +523,7 @@ export function User() {
                                     {selected ? (
                                       <span
                                         className={classNames(
-                                          active
-                                            ? "text-white"
-                                            : "text-white",
+                                          active ? "text-white" : "text-white",
                                           "absolute inset-y-0 right-0 flex items-center pr-4"
                                         )}
                                       >
