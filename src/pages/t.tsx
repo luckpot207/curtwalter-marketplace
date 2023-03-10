@@ -143,13 +143,13 @@ const token = {
 const escrowdata = {
   escrow: {
     isInitialized: true,
-    initializerPubkey: new PublicKey("feijoef9888923jf98329f"),
-    tempTokenAccountPubkey: new PublicKey("feijoef9888923jf98329f"),
-    mintId: new PublicKey("feijoef9888923jf98329f"),
+    initializerPubkey: "feijoef9888923jf98329f",
+    tempTokenAccountPubkey: "feijoef9888923jf98329f",
+    mintId: "feijoef9888923jf98329f",
     price: 72000,
     updatedAt: undefined
   },
-  pubkey: new PublicKey("feijoef9888923jf98329f")
+  pubkey: "dwwwaw4a3rf3f3f3f"
 }
 
 export function Token() {
@@ -157,10 +157,10 @@ export function Token() {
   // const wallet = useWallet()
   // const isConnected = wallet.connected
   let isConnected = true;
-  const wallet = {
-    publicKey: new PublicKey("fesieofisefs343fef3434f"),
-  };
-  const { userNFTS } = useAccounts(wallet?.publicKey?.toString());
+  // const wallet = {
+  //   publicKey: new PublicKey("fesieofisefs343fef3434f"),
+  // };
+  // const { userNFTS } = useAccounts(wallet?.publicKey?.toString());
 
   const [currentOwner, setCurrentOwner] = useState<string | undefined>(
     undefined
@@ -182,26 +182,26 @@ export function Token() {
     //   }
     // }).then(([token, escrowdata]) => {
     setNFT(token as unknown as TokenInfo);
-    setEscrow(escrowdata);
-    if (escrowdata) {
-      setPriceDate(new Date());
-      setCurrentOwner(escrowdata.escrow.initializerPubkey.toBase58());
-    } else if (wallet && wallet?.publicKey && userNFTS.includes(pubkey)) {
-      setCurrentOwner(wallet.publicKey.toBase58());
-    } else {
-      setCurrentOwner(token.token?.currentOwner);
-    }
-    setIsLoading(false);
-    let check = escrow && !token.listing;
-    if (escrowdata && token.listing) {
-      if (Number(escrowdata.escrow.price) !== Number(token.listing.price)) {
-        check = true;
-      }
-    }
-    if (check && escrowdata) {
-      addNotification("Checking price again");
-      controlPrice(escrowdata.pubkey);
-    }
+    // setEscrow(escrowdata);
+    // if (escrowdata) {
+    //   setPriceDate(new Date());
+    //   setCurrentOwner(escrowdata.escrow.initializerPubkey.toBase58());
+    // } else if (wallet && wallet?.publicKey && userNFTS.includes(pubkey)) {
+    //   setCurrentOwner(wallet.publicKey.toBase58());
+    // } else {
+    //   setCurrentOwner(token.token?.currentOwner);
+    // }
+    // setIsLoading(false);
+    // let check = escrow && !token.listing;
+    // if (escrowdata && token.listing) {
+    //   if (Number(escrowdata.escrow.price) !== Number(token.listing.price)) {
+    //     check = true;
+    //   }
+    // }
+    // if (check && escrowdata) {
+    //   addNotification("Checking price again");
+    //   controlPrice(escrowdata.pubkey);
+    // }
     // });
   };
 
@@ -210,19 +210,19 @@ export function Token() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (userNFTS.includes(pubkey!)) {
-      setIsOwner(true);
-    } else if (nft && escrow && wallet) {
-      const walletPubKey = wallet.publicKey?.toBase58();
-      setIsOwner(walletPubKey === escrow.escrow.initializerPubkey.toBase58());
-    } else if (nft && wallet) {
-      const walletPubKey = wallet.publicKey?.toBase58();
-      setIsOwner(walletPubKey === nft.token?.currentOwner);
-    }
+  // useEffect(() => {
+  //   if (userNFTS.includes(pubkey!)) {
+  //     setIsOwner(true);
+  //   } else if (nft && escrow && wallet) {
+  //     const walletPubKey = wallet.publicKey?.toBase58();
+  //     setIsOwner(walletPubKey === escrow.escrow.initializerPubkey.toBase58());
+  //   } else if (nft && wallet) {
+  //     const walletPubKey = wallet.publicKey?.toBase58();
+  //     setIsOwner(walletPubKey === nft.token?.currentOwner);
+  //   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nft, escrow, wallet, userNFTS]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [nft, escrow, wallet, userNFTS]);
 
   useEffect(() => {
     // if (nft) {
@@ -358,10 +358,10 @@ export function MyToken() {
   // const wallet = useWallet()
   // const isConnected = wallet.connected
   let isConnected = true;
-  const wallet = {
-    publicKey: new PublicKey("fesieofisefs343fef3434f"),
-  };
-  const { userNFTS } = useAccounts(wallet?.publicKey?.toString());
+  // const wallet = {
+  //   publicKey: new PublicKey("fesieofisefs343fef3434f"),
+  // };
+  // const { userNFTS } = useAccounts(wallet?.publicKey?.toString());
 
   const [currentOwner, setCurrentOwner] = useState<string | undefined>(
     undefined
@@ -382,27 +382,27 @@ export function MyToken() {
     //     setCurrentOwner(token.token?.currentOwner);
     //   }
     // }).then(([token, escrowdata]) => {
-    setNFT(token as unknown as TokenInfo);
-    setEscrow(escrowdata);
-    if (escrowdata) {
-      setPriceDate(new Date());
-      setCurrentOwner(escrowdata.escrow.initializerPubkey.toBase58());
-    } else if (wallet && wallet?.publicKey && userNFTS.includes(pubkey)) {
-      setCurrentOwner(wallet.publicKey.toBase58());
-    } else {
-      setCurrentOwner(token.token?.currentOwner);
-    }
-    setIsLoading(false);
+    // setNFT(token as unknown as TokenInfo);
+    // setEscrow(escrowdata);
+    // if (escrowdata) {
+    //   setPriceDate(new Date());
+    //   setCurrentOwner(escrowdata.escrow.initializerPubkey.toBase58());
+    // } else if (wallet && wallet?.publicKey && userNFTS.includes(pubkey)) {
+    //   setCurrentOwner(wallet.publicKey.toBase58());
+    // } else {
+    //   setCurrentOwner(token.token?.currentOwner);
+    // }
+    // setIsLoading(false);
     let check = escrow && !token.listing;
-    if (escrowdata && token.listing) {
-      if (Number(escrowdata.escrow.price) !== Number(token.listing.price)) {
-        check = true;
-      }
-    }
-    if (check && escrowdata) {
-      addNotification("Checking price again");
-      controlPrice(escrowdata.pubkey);
-    }
+    // if (escrowdata && token.listing) {
+    //   if (Number(escrowdata.escrow.price) !== Number(token.listing.price)) {
+    //     check = true;
+    //   }
+    // }
+    // if (check && escrowdata) {
+    //   addNotification("Checking price again");
+    //   controlPrice(escrowdata.pubkey);
+    // }
     // });
   };
 
@@ -411,19 +411,19 @@ export function MyToken() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (userNFTS.includes(pubkey!)) {
-      setIsOwner(true);
-    } else if (nft && escrow && wallet) {
-      const walletPubKey = wallet.publicKey?.toBase58();
-      setIsOwner(walletPubKey === escrow.escrow.initializerPubkey.toBase58());
-    } else if (nft && wallet) {
-      const walletPubKey = wallet.publicKey?.toBase58();
-      setIsOwner(walletPubKey === nft.token?.currentOwner);
-    }
+  // useEffect(() => {
+  //   // if (userNFTS.includes(pubkey!)) {
+  //   //   setIsOwner(true);
+  //   // } else if (nft && escrow && wallet) {
+  //   //   const walletPubKey = wallet.publicKey?.toBase58();
+  //   //   setIsOwner(walletPubKey === escrow.escrow.initializerPubkey.toBase58());
+  //   // } else if (nft && wallet) {
+  //   //   const walletPubKey = wallet.publicKey?.toBase58();
+  //   //   setIsOwner(walletPubKey === nft.token?.currentOwner);
+  //   // }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nft, escrow, wallet, userNFTS]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [nft, escrow, wallet, userNFTS]);
 
   useEffect(() => {
     // if (nft) {
@@ -627,9 +627,7 @@ function TokenImage(props: { nft: TokenInfo }) {
     </div>
   );
 }
-function controlPrice(pubkey: PublicKey) {
-  throw new Error("Function not implemented.");
-}
+
 
 const NftTabInfo = (props: { nft: TokenInfo }) => {
   const { nft } = props;

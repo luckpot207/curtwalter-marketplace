@@ -83,7 +83,7 @@ function App() {
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/collection/:slug" element={<Collection />} />
                 <Route path="/user/:pubkey" element={<User />} />
-                <Route path="/mytoken/:pubkey" element={<MyToken />} />
+                <Route path="/t/:pubkey" element={<MyToken />} />
                 <Route path="/launch" element={<LaunchPad loader={false} />} />
               </Routes>
             </Router>
