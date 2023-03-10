@@ -11,6 +11,8 @@ import { Explore } from "./pages/explore";
 import { Collection } from "./pages/collection/[slug]";
 import { LaunchPad } from "./pages/launchpad";
 import { User } from "./pages/user/[pubkey]";
+import { MyToken } from "./pages/t";
+
 import {
   ExternalProvider,
   JsonRpcFetchFunc,
@@ -81,6 +83,7 @@ function App() {
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/collection/:slug" element={<Collection />} />
                 <Route path="/user/:pubkey" element={<User />} />
+                <Route path="/mytoken/:pubkey" element={<MyToken />} />
                 <Route path="/launch" element={<LaunchPad loader={false} />} />
               </Routes>
             </Router>
