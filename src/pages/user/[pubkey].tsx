@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 // import { useSelector } from "../../api/store";
 // import { getTokenList } from "../../api/api";
 import { addNotification } from "../../utils/alert";
@@ -261,10 +261,10 @@ export function User() {
       ?.sort((a: any, b: any) => Number(b.last ?? 0) - Number(a.last ?? 0))
       .sort(comparePrices);
 
-    const ownedTokens =
-      test_getListTokens.tokens?.filter((t: any) =>
-        ownedByUser.includes(t.mintId!)
-      ) ?? [];
+    // const ownedTokens =
+    //   test_getListTokens.tokens?.filter((t: any) =>
+    //     ownedByUser.includes(t.mintId!)
+    //   ) ?? [];
 
     const ownedTokens = nfts.tokens;
     // nfts.tokens?.filter((t: any) => ownedByUser.includes(t.mintId!)) ?? [];
