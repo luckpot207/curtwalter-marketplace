@@ -6,3 +6,4 @@ export type { EnumerableNFT } from "./EnumerableNFT";
 export type { Marketplace } from "./Marketplace";
 export type { NFT } from "./NFT";
 export type { NativeNFT } from "./NativeNFT";
+export type { MarketplaceV2 } from "./MarketplaceV2"

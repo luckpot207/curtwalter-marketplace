@@ -3,3 +3,4 @@ export type { EnumerableNFT } from "./contracts/EnumerableNFT";
 export type { Marketplace } from "./contracts/Marketplace";
 export type { NativeNFT } from "./contracts/NativeNFT";
 export type { NFT } from "./contracts/NFT";
+export type { MarketplaceV2 } from "./contracts/MarketplaceV2"

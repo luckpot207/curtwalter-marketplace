@@ -14,24 +14,31 @@ import {
   useProvider,
   useContract,
 } from "wagmi";
-import { Marketplace, NFT } from "../typechain-types";
+import { Marketplace, NFT, MarketplaceV2 } from "../typechain-types/contracts";
 import {
   NftContractCreatedEvent,
   AuctionContractCreatedEvent,
 } from "../typechain-types/contracts/Marketplace";
+import { SaleCreatedEvent } from "../typechain-types/contracts/MarketplaceV2";
 import { NftCollection as INftCollection } from "../types/nft";
 import {
   MARKETPLACE_ABI,
   NFTIMPLEMENT_ABI,
   AUCTIONIMPLEMENT_ABI,
+  MarketplaceABIV2,
 } from "../utils/abi";
 import { dev } from "../utils/log";
-import { MARKETPLACE_ADDR, NFTIMPLEMENT_ADDR } from "../utils/config";
+import {
+  MarketplaceAddressV2,
+  MARKETPLACE_ADDR,
+  NFTIMPLEMENT_ADDR,
+} from "../utils/config";
 import { toast } from "react-hot-toast";
 import { decodeMetadataUri } from "../utils/nft";
 
 interface MarketplaceContextProps {
   marketplaceContract: Marketplace | null;
+  marketplaceContractV2: MarketplaceV2 | null;
   nftImplementContract: NFT | null;
   marketplaceContractConn: Marketplace | null;
   allNftCollections: Marketplace.NftCollectionStructOutput[];
@@ -49,13 +56,20 @@ interface MarketplaceContextProps {
     tokenId: string,
     startingBid: string
   ) => Promise<NFT | null | undefined>;
+  createSale: (
+    contract: string,
+    tokenId: string,
+    price: string
+  ) => Promise<NFT | null | undefined>;
   progressCreateNftCollection: boolean;
   progressCreateAuction: boolean;
+  progressCreateSale: boolean;
   getCollection: (address: string) => Promise<INftCollection | null>;
 }
 
 export const MarketplaceContext = createContext<MarketplaceContextProps>({
   marketplaceContract: null,
+  marketplaceContractV2: null,
   nftImplementContract: null,
   marketplaceContractConn: null,
   allNftCollections: [],
@@ -65,8 +79,10 @@ export const MarketplaceContext = createContext<MarketplaceContextProps>({
   refreshLoadedData: async () => {},
   createNewNftCollection: async () => null,
   createNewAuction: async () => null,
+  createSale: async () => null,
   progressCreateNftCollection: false,
   progressCreateAuction: false,
+  progressCreateSale: false,
   getCollection: async () => null,
 });
 
@@ -77,6 +93,10 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
 
   const [marketplaceContract, setMarketplaceContract] =
     useState<Marketplace | null>(null);
+  const [marketplaceContractV2, setMarketplaceContractV2] =
+    useState<MarketplaceV2 | null>(null);
+  const [marketplaceContractConnV2, setMarketplaceContractConnV2] =
+    useState<MarketplaceV2 | null>(null);
   const [nftImplementContract, setNftImplementContract] =
     useState<NFT | null>(null);
   const [marketplaceContractConn, setMarketplaceContractConn] =
@@ -99,6 +119,7 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
     useState<boolean>(false);
   const [progressCreateAuction, setProgressCreateAuction] =
     useState<boolean>(false);
+  const [progressCreateSale, setProgressCreateSale] = useState<boolean>(false);
 
   // Keep contracts updated
   useEffect(() => {
@@ -110,6 +131,14 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
       ) as Marketplace;
 
       setMarketplaceContract(newMarketplaceContract);
+
+      const newMarketplaceContractV2: MarketplaceV2 = new Contract(
+        MarketplaceAddressV2,
+        MarketplaceABIV2,
+        provider
+      ) as MarketplaceV2;
+
+      setMarketplaceContractV2(newMarketplaceContractV2);
 
       const newNftImplementContract: NFT = new Contract(
         NFTIMPLEMENT_ADDR,
@@ -126,6 +155,12 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
         signer
       ) as Marketplace;
       setMarketplaceContractConn(newMarketplaceContractConn);
+      const newMarketplaceContractConnV2: MarketplaceV2 = new Contract(
+        MarketplaceAddressV2,
+        MarketplaceABIV2,
+        signer
+      ) as MarketplaceV2;
+      setMarketplaceContractConnV2(newMarketplaceContractConnV2);
     } else {
       setMarketplaceContractConn(null);
     }
@@ -287,10 +322,48 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
     [nftImplementContract, signer]
   );
 
+  const createSale = useCallback(
+    async (contractAddress: string, tokenId: string, price: string) => {
+      if (!!marketplaceContractConnV2 && signer) {
+        try {
+          setProgressCreateSale(true);
+          const txn = await marketplaceContractConnV2.createSale(
+            contractAddress,
+            tokenId,
+            price
+          );
+          const rcpt = await txn.wait();
+          const event: SaleCreatedEvent = rcpt.events?.find(
+            (event) => event.event === "SaleCreated"
+          ) as SaleCreatedEvent;
+          const auctionContractCloneAddr = event.args.author;
+          const auctionContractClone = new Contract(
+            auctionContractCloneAddr,
+            AUCTIONIMPLEMENT_ABI,
+            signer
+          ) as NFT;
+          await refreshLoadedData();
+          setProgressCreateSale(false);
+          toast.success("Sale Created");
+          return auctionContractClone;
+        } catch (e) {
+          dev.error(e);
+          toast.error("Sale: Your sale creation is broken.");
+          setProgressCreateSale(false);
+        }
+      } else {
+        return null;
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [marketplaceContractConnV2, signer]
+  );
+
   return (
     <MarketplaceContext.Provider
       value={{
         marketplaceContract,
+        marketplaceContractV2,
         nftImplementContract,
         marketplaceContractConn,
         allNftCollections,
@@ -300,8 +373,10 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
         refreshLoadedData,
         createNewNftCollection,
         createNewAuction,
+        createSale,
         progressCreateNftCollection,
         progressCreateAuction,
+        progressCreateSale,
         getCollection,
       }}
     >

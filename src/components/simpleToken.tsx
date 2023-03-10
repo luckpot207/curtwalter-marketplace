@@ -21,7 +21,7 @@ export function Image(props: {
     const hostname = "https://ipfs.io/ipfs/";
     const sublink = ".ipfs.nftstorage.link/";
     const src = hostname + cid + "/" + filename;
-    console.log(src);
+    // console.log(src);
     const parts = pp.slice(0, pp.length - 1);
     return (
       <picture>
@@ -149,7 +149,8 @@ export default function Item(
   }
   const ap = props.aProps ?? {};
   return (
-    <Link to={`/t/${props.mintId}`} className="group" {...ap}>
+    <div className="group">
+      {/* // <Link to={`/t/${props.mintId}`} className="group" {...ap}> */}
       <div
         className={
           size === "twitter"
@@ -167,6 +168,15 @@ export default function Item(
         <h3 className="flex-1 mr-1 text-base">{props.title}</h3>
         {rightPricing}
       </div>
-    </Link>
+      <div className="flex justify-between mt-4">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+          Sell
+        </button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+          Auction
+        </button>
+      </div>
+      {/* </Link> */}
+    </div>
   );
 }

@@ -17,3 +17,5 @@ export const AUCTIONIMPLEMENT_ADDR = '0x3BdC30181d01a627Ce75B3f3CE646fEe39A06d45
 export const MARKETPLACE_ADDR = "0x62B251fFA60635A6c2b3849F8a625e79bA276336";
 
 export const POLYGON_MUMBAI_RPC_URL = 'https://rpc-mumbai.maticvigil.com';
+
+export const MarketplaceAddressV2 = "0xA68a8e48E1c4396350241f04e537E38247635b75";
