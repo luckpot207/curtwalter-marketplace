@@ -59,8 +59,8 @@ interface MarketplaceContextProps {
   createSale: (
     contract: string,
     tokenId: string,
-    price: string
-  ) => Promise<NFT | null | undefined>;
+    price: BigNumber
+  ) => Promise<string | null | undefined>;
   progressCreateNftCollection: boolean;
   progressCreateAuction: boolean;
   progressCreateSale: boolean;
@@ -323,29 +323,24 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const createSale = useCallback(
-    async (contractAddress: string, tokenId: string, price: string) => {
+    async (contractAddress: string, tokenId: string, price: BigNumber) => {
       if (!!marketplaceContractConnV2 && signer) {
         try {
           setProgressCreateSale(true);
           const txn = await marketplaceContractConnV2.createSale(
             contractAddress,
             tokenId,
-            price
+            price,
+            { gasLimit: 1000000 }
           );
           const rcpt = await txn.wait();
           const event: SaleCreatedEvent = rcpt.events?.find(
             (event) => event.event === "SaleCreated"
           ) as SaleCreatedEvent;
-          const auctionContractCloneAddr = event.args.author;
-          const auctionContractClone = new Contract(
-            auctionContractCloneAddr,
-            AUCTIONIMPLEMENT_ABI,
-            signer
-          ) as NFT;
-          await refreshLoadedData();
+          const author = event.args.author;
           setProgressCreateSale(false);
-          toast.success("Sale Created");
-          return auctionContractClone;
+          toast.success(`Sale Created by ${author}`);
+          return author;
         } catch (e) {
           dev.error(e);
           toast.error("Sale: Your sale creation is broken.");
