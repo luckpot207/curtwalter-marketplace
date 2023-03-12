@@ -13,6 +13,7 @@ export function UpcomingCollectionsCarousel() {
     {
       featured_image: MoonkeesNft,
       name: "NFT",
+      slug: '2011',
       mint_time: "1/1/2023",
       twitter: "twitter.com",
       other_links: ["listing.other_links"],
@@ -21,6 +22,7 @@ export function UpcomingCollectionsCarousel() {
     {
       featured_image: MoonkeesNft,
       name: "NFT",
+      slug: '2012',
       mint_time: "1/1/2023",
       twitter: "twitter.com",
       other_links: ["listing.other_links"],
@@ -29,6 +31,7 @@ export function UpcomingCollectionsCarousel() {
     {
       featured_image: MoonkeesNft,
       name: "NFT",
+      slug: '2013',
       mint_time: "1/1/2023",
       twitter: "twitter.com",
       other_links: ["listing.other_links"],
@@ -37,6 +40,7 @@ export function UpcomingCollectionsCarousel() {
     {
       featured_image: MoonkeesNft,
       name: "NFT",
+      slug: '2014',
       mint_time: "1/1/2023",
       twitter: "twitter.com",
       other_links: ["listing.other_links"],
@@ -45,6 +49,7 @@ export function UpcomingCollectionsCarousel() {
     {
       featured_image: MoonkeesNft,
       name: "NFT",
+      slug: '2015',
       mint_time: "1/1/2023",
       twitter: "twitter.com",
       other_links: ["listing.other_links"],
@@ -58,9 +63,9 @@ export function UpcomingCollectionsCarousel() {
         listings.map((listing) => {
           return {
             image: listing.featured_image,
-
             imageType: "listing",
             title: listing.name,
+            url:`/t`,
             mintAt: listing.mint_time,
             twitterUrl: listing.twitter,
             otherLinks: listing.other_links,

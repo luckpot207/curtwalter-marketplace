@@ -7,11 +7,12 @@ import { ThemeProvider } from "./themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
+import { Launches } from "./pages/launches";
 import { Explore } from "./pages/explore";
 import { Collection } from "./pages/collection/[slug]";
-import { LaunchPad } from "./pages/launchpad";
+import { ApplyLaunchPad } from "./pages/applyLaunchpad";
 import { User } from "./pages/user/[pubkey]";
-import { MyToken } from "./pages/t";
+import { Token } from "./pages/launchpad";
 
 import {
   ExternalProvider,
@@ -83,8 +84,9 @@ function App() {
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/collection/:slug" element={<Collection />} />
                 <Route path="/user/:pubkey" element={<User />} />
-                <Route path="/t/:pubkey" element={<MyToken />} />
-                <Route path="/launch" element={<LaunchPad loader={false} />} />
+                <Route path="/t" element={<Token />} />
+                <Route path="/applylaunch" element={<ApplyLaunchPad loader={false} />} />
+                <Route path="/launches" element={<Launches />} />
               </Routes>
             </Router>
             <NotificationOverlay />
