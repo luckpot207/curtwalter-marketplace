@@ -16,7 +16,7 @@ export function Top() {
   return (
     <section
       className="flex flex-col items-center rounded-3xl border shadow-md md:flex-row
-       dark:border-zinc-700 dark:bg-zinc-800 bg-gray-100 border-gray-100 w-full mb-8"
+       dark:border-zinc-700 dark:bg-zinc-800 bg-gray-100 border-gray-100 w-full mb-8 dark:text-white"
     >
       <div className="flex flex-col justify-between p-4 leading-normal">
         <h1 className="mb-4 text-4xl font-bold tracking-tight text-center md:text-left">
@@ -25,12 +25,12 @@ export function Top() {
 
         <div
           // to="/explore"
-          className="mb-3 text-xl font-bold tracking-tight text-center md:text-left"
+          className="mb-3 text-xl font-bold tracking-tight text-center md:text-left dark:text-white"
         >
           {/* {data?.collection?.title} */}
           {"Piggy Sol Gang"}
         </div>
-        <p className="mb-3 font-normal text-justify md:text-left">
+        <p className="mb-3 font-normal text-justify text-[18px] md:text-left dark:text-gray-300">
           {/* {data?.collection?.description} */}
           {
             "10,000 cute & cruel piggies living on the Solana lands. Each of them are randomly generated with more than 90+ hand-drawn traits"
