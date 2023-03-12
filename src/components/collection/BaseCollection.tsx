@@ -10,6 +10,7 @@ import { CollectionV2 } from "../../types/nft";
 import { useContract, useSigner, useContractRead } from "wagmi";
 import { NFT_ABI } from "../../utils/abi";
 import useMarketplaceContract from "../../hooks/useMarketplaceContract";
+import { ethers } from "ethers";
 
 export function BaseCollection({
   collection,
@@ -26,6 +27,7 @@ export function BaseCollection({
   });
   const { allSales } = useMarketplaceContract();
   const [title, setTitle] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<string>("");
 
   const getThumbnail = async () => {
@@ -34,10 +36,12 @@ export function BaseCollection({
       (sale) => sale.nftContractAddr == collection.slug
     );
     const tokenUri = await nftContract.tokenURI(nfts[0].tokenId);
+
     const data = await fetch(tokenUri).then((res) => res.json());
-    // console.log("tokenUri", data);
+    console.log("tokenUri", data);
     setThumbnail(data.image);
     setTitle(data.name);
+    setPrice(ethers.utils.formatEther(nfts[0].price));
   };
 
   useEffect(() => {
@@ -86,7 +90,7 @@ export function BaseCollection({
                     src={solanaLogo}
                   />{" "}
                   {/* {nFormatter(lamportsToSOL(collection.floorPrice ?? 0), 2)} */}
-                  10
+                  {price}
                 </p>
                 <p className="">Listed: {collection.listedCount}</p>
               </>

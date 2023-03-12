@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SimpleToken, { ItemShowField } from "../../components/simpleToken";
+import SaleToken from "../../components/SaleToken";
 import CollectionHeader from "../../components/collectionHeader";
 import FilterBar from "../../components/filterBar";
 import { Filters, MobileFilters } from "../../components/filters";
@@ -52,13 +53,14 @@ export function Collection() {
           const metadata = await fetch(metadataUri).then((res) => res.json());
           return {
             mintId: nft.tokenId.toString(),
-            title: nft.tokenId.toString(),
+            title: metadata.name,
             image: metadata.image,
             listedForSale: true,
             price: ethers.utils.formatEther(nft.price),
             offerPrice: ethers.utils.formatEther(nft.price),
             last: ethers.utils.formatEther(nft.price),
             collectionId: nft.nftContractAddr,
+            saleId: nft.saleId,
           };
         })
       );
@@ -170,10 +172,10 @@ export function Collection() {
                     : "gap-y-10 gap-x-6 xl:gap-x-8"
                 )}
               >
-                {tokenList.map((product: any) => (
-                  <SimpleToken
-                    key={product.mintId}
-                    {...product}
+                {tokenList.map((token: any) => (
+                  <SaleToken
+                    key={token.saleId}
+                    {...token}
                     showField={getShowFieldFromOrderBy(orderBy)}
                     size={
                       TwitterStyleCollections.includes(slug!)
