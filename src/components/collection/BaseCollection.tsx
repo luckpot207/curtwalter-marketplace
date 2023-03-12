@@ -1,17 +1,49 @@
 import { BaseCollectionData } from "../../data/collection";
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import { useSelector } from "../../api/store";
 import { Link } from "react-router-dom";
 // import { nFormatter } from "../collectionHeader";
 import { lamportsToSOL } from "../../utils/sol";
 import solanaLogo from "../../solana.svg";
 import { Image, imageProxyUrl } from "../../componentsV3/image/Image";
+import { CollectionV2 } from "../../types/nft";
+import { useContract, useSigner, useContractRead } from "wagmi";
+import { NFT_ABI } from "../../utils/abi";
+import useMarketplaceContract from "../../hooks/useMarketplaceContract";
 
-export function BaseCollection(props: {
-  collection: BaseCollectionData;
+export function BaseCollection({
+  collection,
+  sold,
+}: {
+  collection: CollectionV2;
   sold?: boolean;
 }) {
-  const [collection, setCollection] = React.useState(props.collection);
+  const { data: signer } = useSigner();
+  const nftContract = useContract({
+    address: collection.slug,
+    abi: NFT_ABI,
+    signerOrProvider: signer,
+  });
+  const { allSales } = useMarketplaceContract();
+  const [title, setTitle] = useState<string>("");
+  const [thumbnail, setThumbnail] = useState<string>("");
+
+  const getThumbnail = async () => {
+    if (!nftContract) return;
+    const nfts = allSales.filter(
+      (sale) => sale.nftContractAddr == collection.slug
+    );
+    const tokenUri = await nftContract.tokenURI(nfts[0].tokenId);
+    const data = await fetch(tokenUri).then((res) => res.json());
+    // console.log("tokenUri", data);
+    setThumbnail(data.image);
+    setTitle(data.name);
+  };
+
+  useEffect(() => {
+    if (nftContract) getThumbnail();
+  }, [nftContract, allSales]);
+  // const [collection, setCollection] = React.useState(props.collection);
   const darkMode = false; //useSelector((data) => data.darkMode);
 
   return (
@@ -22,11 +54,11 @@ export function BaseCollection(props: {
       <div className="group relative h-full flex flex-col justify-between">
         <div className="w-full bg-gray-200 rounded-2xl overflow-hidden aspect-w-1 aspect-h-1">
           <Image
-            src={imageProxyUrl(collection.thumbnail, "collection")}
-            alt={collection.title}
-            size="xl"
+            src={imageProxyUrl(thumbnail, "collection")}
+            alt={title}
+            size="xs"
             className={`w-full h-full object-center object-cover group-hover:opacity-75 ${
-              props.sold ? "opacity-50" : ""
+              sold ? "opacity-50" : ""
             }`}
           />
         </div>
@@ -34,15 +66,15 @@ export function BaseCollection(props: {
           <h3 className="mt-2 font-semibold lines-1 mb-2">
             <Link to={`/collection/${collection.slug}`}>
               <span className="absolute inset-0 " />
-              {collection.title}
+              {title}
             </Link>
           </h3>
           <div
             className={`bg-white dark:bg-zinc-900 items-number-box-shadow text-sm w-full font-semibold rounded-2xl py-2 flex px-3 ${
-              props.sold ? "justify-center" : "justify-between"
+              sold ? "justify-center" : "justify-between"
             }`}
           >
-            {props.sold ? (
+            {sold ? (
               "Sold"
             ) : (
               <>

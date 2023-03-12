@@ -89,6 +89,17 @@ export function imageProxyUrl(
   if (url.startsWith("https://assets.alpha.art/opt/")) {
     return url;
   }
+  if (url.startsWith("ipfs://")) {
+    const pp = url.split("/");
+    const cid = pp.slice(0, pp.length)[2];
+    const filename = pp.slice(0, pp.length)[3]
+      ? "/" + pp.slice(0, pp.length)[3]
+      : "";
+    const hostname = "https://ipfs.io/ipfs/";
+    const src = hostname + cid + filename;
+    // console.log(src);
+    return src;
+  }
   // return `https://img.alpha.art/${type}/${url}`;
   return url;
 }

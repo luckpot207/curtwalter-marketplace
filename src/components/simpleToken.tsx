@@ -22,37 +22,29 @@ export function Image(props: {
   if (props.src.startsWith("ipfs://")) {
     const pp = props.src.split("/");
     const cid = pp.slice(0, pp.length)[2];
-    const filename = pp.slice(0, pp.length)[3];
+    const filename = pp.slice(0, pp.length)[3]
+      ? "/" + pp.slice(0, pp.length)[3]
+      : "";
     const hostname = "https://ipfs.io/ipfs/";
-    const sublink = ".ipfs.nftstorage.link/";
-    const src = hostname + cid + "/" + filename;
+    const src = hostname + cid + filename;
     // console.log(src);
     const parts = pp.slice(0, pp.length - 1);
     return (
-      <picture>
-        <source
-          type="image/webp"
-          srcSet={[
-            [...parts, "340.webp"].join("/"),
-            [...parts, "680.webp 2x"].join("/"),
-          ].join(", ")}
-        />
-        <img
-          loading="lazy"
-          src={src}
-          // src={[...parts, "340.png"].join("/")}
-          // srcSet={[
-          //   [...parts, "340.png"].join("/"),
-          //   [...parts, "680.png 2x"].join("/"),
-          // ].join(", ")}
-          alt={props.alt}
-          className={
-            props.resize === "contain"
-              ? `w-full h-full object-center object-contain group-hover:opacity-60${rounded}`
-              : `w-full h-full object-center object-cover group-hover:opacity-60${rounded}`
-          }
-        />
-      </picture>
+      <img
+        loading="lazy"
+        src={src}
+        // src={[...parts, "340.png"].join("/")}
+        // srcSet={[
+        //   [...parts, "340.png"].join("/"),
+        //   [...parts, "680.png 2x"].join("/"),
+        // ].join(", ")}
+        alt={props.alt}
+        className={
+          props.resize === "contain"
+            ? `w-full h-full object-center object-contain group-hover:opacity-60${rounded}`
+            : `w-full h-full object-center object-cover group-hover:opacity-60${rounded}`
+        }
+      />
     );
   }
   return (
@@ -116,13 +108,7 @@ export default function Item(
 ) {
   const { data: signer } = useSigner();
 
-  const {
-    allNftCollections,
-    allNftCollectionsAuthored,
-    allNftCollectionsWhereSignerOwnsTokens,
-    allNftCollectionsWhereTokenOnSale,
-    createSale,
-  } = useMarketplaceContract();
+  const { createSale } = useMarketplaceContract();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [price, setPrice] = useState<number>(0);
   const handleChange = (e: any) => {
@@ -141,7 +127,8 @@ export default function Item(
     price: number
   ) => {
     if (!nftContract) return;
-    // console.log(await nftContract.ownerOf(tokenId));
+    setPrice(0);
+    setOpenModal(false);
     await nftContract
       .approve(MarketplaceAddressV2, tokenId)
       .then(async (tx: any) => {
@@ -151,8 +138,6 @@ export default function Item(
           ethers.utils.parseEther(price.toString())
         );
       });
-    setPrice(0);
-    setOpenModal(false);
   };
 
   const { size = "rect", resize = "cover" } = props;
@@ -210,10 +195,10 @@ export default function Item(
           <LargeImage src={props.image!} alt={props.title} />
         )}
       </div>
-      <div className="flex justify-between pl-2 pr-2 mt-4">
+      {/* <div className="flex justify-between pl-2 pr-2 mt-4">
         <h3 className="flex-1 mr-1 text-base">{props.title}</h3>
         {rightPricing}
-      </div>
+      </div> */}
       <div className="flex justify-between mt-4">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"

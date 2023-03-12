@@ -18,4 +18,4 @@ export const MARKETPLACE_ADDR = "0x62B251fFA60635A6c2b3849F8a625e79bA276336";
 
 export const POLYGON_MUMBAI_RPC_URL = 'https://rpc-mumbai.maticvigil.com';
 
-export const MarketplaceAddressV2 = "0xDF563DE628eD29Be4089c4e0e45Db4Ffa59d8A09";
+export const MarketplaceAddressV2 = "0x5ff9d22F2C88e5b2868712804fC59a641214F185";

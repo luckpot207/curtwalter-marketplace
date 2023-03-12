@@ -23,77 +23,51 @@ import { NFT } from "../../typechain-types";
 import useMarketplaceContract from "../../hooks/useMarketplaceContract";
 import { NftCollection as INftCollection } from "../../types/nft";
 import { BigNumber, ethers } from "ethers";
+import { useContract, useSigner } from "wagmi";
+import { NFT_ABI } from "../../utils/abi";
 
 export function Collection() {
   const { slug } = useParams<{ slug: string }>();
-  const { getCollection } = useMarketplaceContract();
+  const { getCollection, allSales } = useMarketplaceContract();
   const [collection, setCollection] = useState<INftCollection | null>(null);
   const [tokenList, setTokenList] = useState<TokenAPISimple[]>([]);
   const [expectedTokenCount, setExpectedTokenCount] = useState<number>(0);
   // const [collectionMeta] = useCollection(slug!);
+  const { data: signer } = useSigner();
+  const nftContract = useContract({
+    address: slug,
+    abi: NFT_ABI,
+    signerOrProvider: signer,
+  });
 
   const getCollectionData = async (address: string) => {
-    const collection = await getCollection(address);
-    setCollection(collection);
-    if (collection?.nftsInCollection.length) {
-      setExpectedTokenCount(collection?.nftsInCollection.length);
-      const tokenlist: TokenAPISimple[] = collection?.nftsInCollection.map(
-        (nft) => ({
-          mintId: nft.tokenId.toString(),
-          title: nft.tokenId.toString(),
-          image: nft.tokenUri.name ?? "",
-          listedForSale: true,
-          price: ethers.utils.formatEther(nft.tokenPrice),
-          offerPrice: ethers.utils.formatEther(nft.tokenPrice),
-          last: ethers.utils.formatEther(nft.tokenPrice),
-          collectionId: collection.nftContractAddr,
+    const nfts = allSales.filter((sale) => sale.nftContractAddr == address);
+    // const collection = await getCollection(address);
+    // setCollection(collection);
+    if (nfts.length && nftContract) {
+      setExpectedTokenCount(nfts.length);
+      const tokenlist: TokenAPISimple[] = await Promise.all(
+        nfts.map(async (nft) => {
+          const metadataUri = await nftContract.tokenURI(nft.tokenId);
+          const metadata = await fetch(metadataUri).then((res) => res.json());
+          return {
+            mintId: nft.tokenId.toString(),
+            title: nft.tokenId.toString(),
+            image: metadata.image,
+            listedForSale: true,
+            price: ethers.utils.formatEther(nft.price),
+            offerPrice: ethers.utils.formatEther(nft.price),
+            last: ethers.utils.formatEther(nft.price),
+            collectionId: nft.nftContractAddr,
+          };
         })
       );
+
       setTokenList(tokenlist);
     }
   };
 
-  const collectionMeta = {
-    collection: {
-      id: "999",
-      slug: "my_slug",
-      description: "this is my nft",
-      authorityPubkey: "authority",
-      title: "art piece",
-      thumbnail: MoonkeesNft,
-      banner: MoonkeesNft,
-      links: ["d", "w"],
-      total_items: 13,
-
-      totalItems: 12,
-      verified: true,
-      symbol: "my_symbol",
-      ownerCount: 23,
-      volume: 44,
-      alternativeAuthorities: ["favor", "John"],
-      collaborators: ["Ted", "Paul"],
-      addedAt: "1678393314524",
-      all_sales: 32
-    }
-  }
-  // const {
-  //   progress,
-  //   tokenList,
-  //   filterIndex,
-  //   expectedTokenCount,
-  //   nextPageToken,
-  //   orderBy,
-  // } = useSelector((data:any) => ({
-  //   progress: data.filterIsInProgress,
-  //   tokenList: data.tokenList,
-  //   filterIndex: data.filterIndex,
-  //   nextPageToken: data.nextPageToken,
-  //   expectedTokenCount: data.expectedTokenCount,
-  //   orderBy: data.orderBy,
-  // }));
-
   const progress = false;
-  // const tokenList = ["aaaaa", "fffff", "bbbbb"];
   const filterIndex = 0;
   const nextPageToken = "aaaaa";
   const orderBy = "HIGHEST_CURRENT_OFFER";
@@ -214,7 +188,7 @@ export function Collection() {
                   />
                 ))}
 
-                {typeof nextPageToken === "string" && (
+                {/* {typeof nextPageToken === "string" && (
                   <>
                     <div
                       className="animate-pulse"
@@ -241,7 +215,7 @@ export function Collection() {
                       </div>
                     ))}
                   </>
-                )}
+                )} */}
               </div>
             )}
           </main>

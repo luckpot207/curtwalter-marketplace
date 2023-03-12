@@ -52,8 +52,6 @@ export function TokenListing(props: {
     setCancelOffer(offer);
   };
 
-  
-
   if (tokens.length > 0) {
     if (collections) {
       return (
@@ -128,9 +126,6 @@ export function TokenListing(props: {
             />
           ))}
         </div>
-        
-
-
       </>
     );
   }

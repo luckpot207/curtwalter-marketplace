@@ -109,7 +109,7 @@ export declare namespace MarketplaceV2 {
   };
 }
 
-export interface MarketplaceV2Interface extends utils.Interface {
+export interface MarketplaceInterfaceV2 extends utils.Interface {
   functions: {
     "auctionBid(uint256)": FunctionFragment;
     "auctionCount()": FunctionFragment;
@@ -121,10 +121,12 @@ export interface MarketplaceV2Interface extends utils.Interface {
     "createSale(address,uint256,uint256)": FunctionFragment;
     "getAllNftCollections()": FunctionFragment;
     "getAuctionById(uint256)": FunctionFragment;
+    "getAuctions()": FunctionFragment;
     "getNftCollectionsWhereTokensOnSale()": FunctionFragment;
     "getNftsCollectionsAuthored()": FunctionFragment;
     "getNftsCollectionsWhereOwnerOwnsTokens()": FunctionFragment;
     "getSaleById(uint256)": FunctionFragment;
+    "getSales()": FunctionFragment;
     "nftContractImplementation()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -144,10 +146,12 @@ export interface MarketplaceV2Interface extends utils.Interface {
       | "createSale"
       | "getAllNftCollections"
       | "getAuctionById"
+      | "getAuctions"
       | "getNftCollectionsWhereTokensOnSale"
       | "getNftsCollectionsAuthored"
       | "getNftsCollectionsWhereOwnerOwnsTokens"
       | "getSaleById"
+      | "getSales"
       | "nftContractImplementation"
       | "owner"
       | "renounceOwnership"
@@ -209,6 +213,10 @@ export interface MarketplaceV2Interface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getAuctions",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getNftCollectionsWhereTokensOnSale",
     values?: undefined
   ): string;
@@ -224,6 +232,7 @@ export interface MarketplaceV2Interface extends utils.Interface {
     functionFragment: "getSaleById",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "getSales", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "nftContractImplementation",
     values?: undefined
@@ -268,6 +277,10 @@ export interface MarketplaceV2Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getAuctions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getNftCollectionsWhereTokensOnSale",
     data: BytesLike
   ): Result;
@@ -283,6 +296,7 @@ export interface MarketplaceV2Interface extends utils.Interface {
     functionFragment: "getSaleById",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getSales", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "nftContractImplementation",
     data: BytesLike
@@ -481,7 +495,7 @@ export interface MarketplaceV2 extends BaseContract {
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: MarketplaceV2Interface;
+  interface: MarketplaceInterfaceV2;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -556,6 +570,10 @@ export interface MarketplaceV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[MarketplaceV2.AuctionStructOutput]>;
 
+    getAuctions(
+      overrides?: CallOverrides
+    ): Promise<[MarketplaceV2.AuctionStructOutput[]]>;
+
     getNftCollectionsWhereTokensOnSale(
       overrides?: CallOverrides
     ): Promise<[MarketplaceV2.NftCollectionStructOutput[]]>;
@@ -572,6 +590,10 @@ export interface MarketplaceV2 extends BaseContract {
       _saleId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[MarketplaceV2.SaleStructOutput]>;
+
+    getSales(
+      overrides?: CallOverrides
+    ): Promise<[MarketplaceV2.SaleStructOutput[]]>;
 
     nftContractImplementation(overrides?: CallOverrides): Promise<[string]>;
 
@@ -642,6 +664,10 @@ export interface MarketplaceV2 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<MarketplaceV2.AuctionStructOutput>;
 
+  getAuctions(
+    overrides?: CallOverrides
+  ): Promise<MarketplaceV2.AuctionStructOutput[]>;
+
   getNftCollectionsWhereTokensOnSale(
     overrides?: CallOverrides
   ): Promise<MarketplaceV2.NftCollectionStructOutput[]>;
@@ -658,6 +684,8 @@ export interface MarketplaceV2 extends BaseContract {
     _saleId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<MarketplaceV2.SaleStructOutput>;
+
+  getSales(overrides?: CallOverrides): Promise<MarketplaceV2.SaleStructOutput[]>;
 
   nftContractImplementation(overrides?: CallOverrides): Promise<string>;
 
@@ -728,6 +756,10 @@ export interface MarketplaceV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<MarketplaceV2.AuctionStructOutput>;
 
+    getAuctions(
+      overrides?: CallOverrides
+    ): Promise<MarketplaceV2.AuctionStructOutput[]>;
+
     getNftCollectionsWhereTokensOnSale(
       overrides?: CallOverrides
     ): Promise<MarketplaceV2.NftCollectionStructOutput[]>;
@@ -744,6 +776,10 @@ export interface MarketplaceV2 extends BaseContract {
       _saleId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<MarketplaceV2.SaleStructOutput>;
+
+    getSales(
+      overrides?: CallOverrides
+    ): Promise<MarketplaceV2.SaleStructOutput[]>;
 
     nftContractImplementation(overrides?: CallOverrides): Promise<string>;
 
@@ -945,6 +981,8 @@ export interface MarketplaceV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getAuctions(overrides?: CallOverrides): Promise<BigNumber>;
+
     getNftCollectionsWhereTokensOnSale(
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -959,6 +997,8 @@ export interface MarketplaceV2 extends BaseContract {
       _saleId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getSales(overrides?: CallOverrides): Promise<BigNumber>;
 
     nftContractImplementation(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1030,6 +1070,8 @@ export interface MarketplaceV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getAuctions(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getNftCollectionsWhereTokensOnSale(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1046,6 +1088,8 @@ export interface MarketplaceV2 extends BaseContract {
       _saleId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getSales(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nftContractImplementation(
       overrides?: CallOverrides

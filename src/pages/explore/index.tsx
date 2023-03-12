@@ -24,12 +24,7 @@ import { Marketplace } from "../../typechain-types";
 import { decodeMetadataUri, getIpfsFileUri } from "../../utils/nft";
 
 export function Explore() {
-  const {
-    allNftCollections,
-    allNftCollectionsAuthored,
-    allNftCollectionsWhereSignerOwnsTokens,
-    allNftCollectionsWhereTokenOnSale,
-  } = useMarketplaceContract();
+  const { allCollections } = useMarketplaceContract();
   const { isConnected } = useAccount();
 
   const url = window.location.pathname;
@@ -125,28 +120,32 @@ export function Explore() {
   useEffect(() => {
     setCollectionListNextPage(false);
     // console.log("allnftCollections ", allNftCollections);
-    const collections: BaseCollectionData[] = allNftCollections.map(
-      (collection, idx) => ({
-        id: idx.toString(),
-        slug: collection.nftContractAddr,
-        title: collection.name,
-        thumbnail:
-          collection.nftsInCollection.length > 0
-            ? getIpfsFileUri(
-                decodeMetadataUri(collection.nftsInCollection[0].metadataUri)
-                  .image as string
-              )
-            : "",
-        totalItems: 1000,
-        addedAt: "1678393314524",
-        listedCount: 10,
-        floorPrice: "0",
-      })
-    );
-    setCollectionList(collections);
-    setCollectionListOffset(collections.length);
-    setCollectionListNextPage(collections.length > 0);
+
+    // setCollectionListOffset(collections.length);
+    // setCollectionListNextPage(collections.length > 0);
   }, [categoryFilter, collectionListSort, collectionListSearch]);
+
+  // useEffect(() => {
+  //   const collections: BaseCollectionData[] = allNftCollections.map(
+  //     (collection, idx) => ({
+  //       id: idx.toString(),
+  //       slug: collection.nftContractAddr,
+  //       title: collection.name,
+  //       thumbnail:
+  //         collection.nftsInCollection.length > 0
+  //           ? getIpfsFileUri(
+  //               decodeMetadataUri(collection.nftsInCollection[0].metadataUri)
+  //                 .image as string
+  //             )
+  //           : "",
+  //       totalItems: 1000,
+  //       addedAt: "1678393314524",
+  //       listedCount: 10,
+  //       floorPrice: "0",
+  //     })
+  //   );
+  //   setCollectionList(collections);
+  // }, [allSales]);
 
   const handleCategoryFilter = (category: CategoryData) => {
     if (categoryFilter.includes(category.id.toString())) {
@@ -312,7 +311,7 @@ export function Explore() {
           </div>
         </div>
         <div className="mt-4 gap-y-12 gap-x-3 grid grid-cols-1 md:gap-y-4 sm:grid-cols-2 md:grid-cols-3 md:gap-x-3 lg:gap-y-8 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 lg:gap-x-3 mb-16">
-          {collectionList.map((item: any) => (
+          {allCollections.map((item: any) => (
             <BaseCollection key={item.id} collection={item} />
           ))}
           {collectionListNextPage && (

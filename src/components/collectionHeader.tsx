@@ -10,8 +10,8 @@ import { classNames } from "../utils/clsx";
 import { TwitterIcon, HowRareIsIcon, DiscordIcon, WebsiteIcon } from "./icons";
 import Tooltip from "./tooltip";
 import { NftCollection as INftCollection } from "../types/nft";
-import Banner from "../assets/banner.png";
-import Nft from "../assets/nfts/5852.jpg";
+import Banner from "../assets/banner.jpg";
+import Nft from "../assets/nfts/nft-blog-lg.webp";
 
 export function nFormatter(num: number, digits: number) {
   const lookup = [

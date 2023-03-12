@@ -34,3 +34,13 @@ export interface NftCollection {
   nftContractAddr: string;
   nftsInCollection: Array<Nft>;
 }
+
+export interface CollectionV2 {
+  id: string,
+  slug: string,
+  title: string,
+  thumbnail: string,
+  totalItems: number,
+  listedCount?: number,
+  floorPrice?: string
+}
