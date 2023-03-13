@@ -14,6 +14,9 @@ export function Sidebar() {
           <li>
             <button
               type="button"
+              onClick={() => {
+                navigate("/");
+              }}
               className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
             >
               <svg
@@ -140,14 +143,17 @@ export function Sidebar() {
               className="hidden py-2 space-y-2 duration-1000"
             >
               <li>
-                <button className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap">
+                <button
+                  onClick={() => navigate("/launches")}
+                  className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap"
+                >
                   Launches
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => {
-                    navigate("/launch");
+                    navigate("/applylaunch");
                   }}
                   className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 whitespace-nowrap"
                 >

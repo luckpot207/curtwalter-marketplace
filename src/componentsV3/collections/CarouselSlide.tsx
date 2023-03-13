@@ -104,7 +104,7 @@ export function CarouselSlide({ image, imageType, title, url, floorPrice, listed
             { floorPrice && (
               <div className="flex items-center justify-start">
                 Floor:
-                <SolanaLogo className='h-3 w-min ml-1 mr-1 w-3'/>
+                <SolanaLogo className='h-3 w-min ml-1 mr-1'/>
                 {nFormatter(lamportsToSOL(floorPrice ?? 0), 2)}
               </div>
             ) }

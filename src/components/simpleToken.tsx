@@ -237,7 +237,7 @@ export default function Item(
 
       {openSaleModal ? (
         <div className="main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster background: rgba(0,0,0,.7)">
-          <div className="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+          <div className="border border-teal-500 modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
             <div className="modal-content py-4 text-left px-6 dark:bg-zinc-800  dark:purple-border-hover gray-border-hover">
               {/* <!--Title--> */}
               <div className="flex justify-between items-center pb-3">
@@ -260,7 +260,7 @@ export default function Item(
               {/* <!--Body--> */}
               <div className={`my-5 `}>
                 <div className="relative mb-4 ">
-                  <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
+                  <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,white,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute ">
                     Price
                   </p>
                   <input
