@@ -33,25 +33,24 @@ export interface NFTInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "authorAddr()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "buyNftForSale(uint256)": FunctionFragment;
-    "cancelNftForSale(uint256)": FunctionFragment;
     "description()": FunctionFragment;
     "getAllNfts()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getNftsOnSale()": FunctionFragment;
     "getNftsOnSaleNum()": FunctionFragment;
     "getNftsOwned()": FunctionFragment;
-    "initialize(string,string,string,address,address)": FunctionFragment;
+    "initialize(string,string,string,string,uint256,uint256,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "marketplaceAddr()": FunctionFragment;
-    "mintNft(string)": FunctionFragment;
+    "mintNft()": FunctionFragment;
     "name()": FunctionFragment;
     "nativeNftAddr()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
-    "putNftForSale(uint256,uint256)": FunctionFragment;
+    "price()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "supply()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -59,6 +58,7 @@ export interface NFTInterface extends utils.Interface {
     "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "uri()": FunctionFragment;
   };
 
   getFunction(
@@ -66,8 +66,6 @@ export interface NFTInterface extends utils.Interface {
       | "approve"
       | "authorAddr"
       | "balanceOf"
-      | "buyNftForSale"
-      | "cancelNftForSale"
       | "description"
       | "getAllNfts"
       | "getApproved"
@@ -81,10 +79,11 @@ export interface NFTInterface extends utils.Interface {
       | "name"
       | "nativeNftAddr"
       | "ownerOf"
-      | "putNftForSale"
+      | "price"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "supply"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -92,6 +91,7 @@ export interface NFTInterface extends utils.Interface {
       | "tokenURI"
       | "totalSupply"
       | "transferFrom"
+      | "uri"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -105,14 +105,6 @@ export interface NFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "buyNftForSale",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "cancelNftForSale",
-    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "description",
@@ -145,6 +137,8 @@ export interface NFTInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -156,10 +150,7 @@ export interface NFTInterface extends utils.Interface {
     functionFragment: "marketplaceAddr",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "mintNft",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "mintNft", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "nativeNftAddr",
@@ -169,10 +160,7 @@ export interface NFTInterface extends utils.Interface {
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "putNftForSale",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: "price", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
@@ -194,6 +182,7 @@ export interface NFTInterface extends utils.Interface {
     functionFragment: "setApprovalForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
+  encodeFunctionData(functionFragment: "supply", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
@@ -223,18 +212,11 @@ export interface NFTInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(functionFragment: "uri", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "authorAddr", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "buyNftForSale",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "cancelNftForSale",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "description",
     data: BytesLike
@@ -272,10 +254,7 @@ export interface NFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "putNftForSale",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "price", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -288,6 +267,7 @@ export interface NFTInterface extends utils.Interface {
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "supply", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -310,25 +290,20 @@ export interface NFTInterface extends utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "Initialized(uint8)": EventFragment;
-    "NftBought(address,uint256,address,uint256)": EventFragment;
     "NftMinted(address,uint256,address,string)": EventFragment;
-    "NftOnSale(address,uint256,uint256)": EventFragment;
-    "NftSaleCancel(address,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftBought"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NftMinted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftOnSale"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftSaleCancel"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -363,19 +338,6 @@ export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
-export interface NftBoughtEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-  boughtBy: string;
-  price: BigNumber;
-}
-export type NftBoughtEvent = TypedEvent<
-  [string, BigNumber, string, BigNumber],
-  NftBoughtEventObject
->;
-
-export type NftBoughtEventFilter = TypedEventFilter<NftBoughtEvent>;
-
 export interface NftMintedEventObject {
   nftContractAddress: string;
   tokenId: BigNumber;
@@ -388,29 +350,6 @@ export type NftMintedEvent = TypedEvent<
 >;
 
 export type NftMintedEventFilter = TypedEventFilter<NftMintedEvent>;
-
-export interface NftOnSaleEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-  price: BigNumber;
-}
-export type NftOnSaleEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  NftOnSaleEventObject
->;
-
-export type NftOnSaleEventFilter = TypedEventFilter<NftOnSaleEvent>;
-
-export interface NftSaleCancelEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-}
-export type NftSaleCancelEvent = TypedEvent<
-  [string, BigNumber],
-  NftSaleCancelEventObject
->;
-
-export type NftSaleCancelEventFilter = TypedEventFilter<NftSaleCancelEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -464,16 +403,6 @@ export interface NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    buyNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    cancelNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     description(overrides?: CallOverrides): Promise<[string]>;
 
     getAllNfts(
@@ -520,8 +449,10 @@ export interface NFT extends BaseContract {
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       _marketplaceAddr: PromiseOrValue<string>,
-      _nativeNftAddr: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -534,8 +465,7 @@ export interface NFT extends BaseContract {
     marketplaceAddr(overrides?: CallOverrides): Promise<[string]>;
 
     mintNft(
-      _metadataUri: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
@@ -547,11 +477,7 @@ export interface NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    putNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      _price: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    price(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -573,6 +499,8 @@ export interface NFT extends BaseContract {
       approved: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    supply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -605,6 +533,8 @@ export interface NFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    uri(overrides?: CallOverrides): Promise<[string]>;
   };
 
   approve(
@@ -619,16 +549,6 @@ export interface NFT extends BaseContract {
     owner: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
-
-  buyNftForSale(
-    _id: PromiseOrValue<BigNumberish>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  cancelNftForSale(
-    _id: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   description(overrides?: CallOverrides): Promise<string>;
 
@@ -676,8 +596,10 @@ export interface NFT extends BaseContract {
     _name: PromiseOrValue<string>,
     _symbol: PromiseOrValue<string>,
     _description: PromiseOrValue<string>,
+    _uri: PromiseOrValue<string>,
+    _price: PromiseOrValue<BigNumberish>,
+    _supply: PromiseOrValue<BigNumberish>,
     _marketplaceAddr: PromiseOrValue<string>,
-    _nativeNftAddr: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -690,8 +612,7 @@ export interface NFT extends BaseContract {
   marketplaceAddr(overrides?: CallOverrides): Promise<string>;
 
   mintNft(
-    _metadataUri: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
@@ -703,11 +624,7 @@ export interface NFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  putNftForSale(
-    _id: PromiseOrValue<BigNumberish>,
-    _price: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  price(overrides?: CallOverrides): Promise<BigNumber>;
 
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
@@ -729,6 +646,8 @@ export interface NFT extends BaseContract {
     approved: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  supply(overrides?: CallOverrides): Promise<BigNumber>;
 
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
@@ -762,6 +681,8 @@ export interface NFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  uri(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
     approve(
       to: PromiseOrValue<string>,
@@ -775,16 +696,6 @@ export interface NFT extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    buyNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    cancelNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     description(overrides?: CallOverrides): Promise<string>;
 
@@ -832,8 +743,10 @@ export interface NFT extends BaseContract {
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       _marketplaceAddr: PromiseOrValue<string>,
-      _nativeNftAddr: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -845,10 +758,7 @@ export interface NFT extends BaseContract {
 
     marketplaceAddr(overrides?: CallOverrides): Promise<string>;
 
-    mintNft(
-      _metadataUri: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    mintNft(overrides?: CallOverrides): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -859,11 +769,7 @@ export interface NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    putNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      _price: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    price(overrides?: CallOverrides): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -885,6 +791,8 @@ export interface NFT extends BaseContract {
       approved: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    supply(overrides?: CallOverrides): Promise<BigNumber>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -917,6 +825,8 @@ export interface NFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    uri(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -945,19 +855,6 @@ export interface NFT extends BaseContract {
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
-    "NftBought(address,uint256,address,uint256)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      boughtBy?: null,
-      price?: null
-    ): NftBoughtEventFilter;
-    NftBought(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      boughtBy?: null,
-      price?: null
-    ): NftBoughtEventFilter;
-
     "NftMinted(address,uint256,address,string)"(
       nftContractAddress?: PromiseOrValue<string> | null,
       tokenId?: PromiseOrValue<BigNumberish> | null,
@@ -970,26 +867,6 @@ export interface NFT extends BaseContract {
       mintedTo?: PromiseOrValue<string> | null,
       tokenUri?: null
     ): NftMintedEventFilter;
-
-    "NftOnSale(address,uint256,uint256)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      price?: null
-    ): NftOnSaleEventFilter;
-    NftOnSale(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      price?: null
-    ): NftOnSaleEventFilter;
-
-    "NftSaleCancel(address,uint256)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): NftSaleCancelEventFilter;
-    NftSaleCancel(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): NftSaleCancelEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
@@ -1017,16 +894,6 @@ export interface NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    buyNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    cancelNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     description(overrides?: CallOverrides): Promise<BigNumber>;
 
     getAllNfts(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1046,8 +913,10 @@ export interface NFT extends BaseContract {
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       _marketplaceAddr: PromiseOrValue<string>,
-      _nativeNftAddr: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1060,8 +929,7 @@ export interface NFT extends BaseContract {
     marketplaceAddr(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintNft(
-      _metadataUri: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1073,11 +941,7 @@ export interface NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    putNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      _price: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    price(overrides?: CallOverrides): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -1099,6 +963,8 @@ export interface NFT extends BaseContract {
       approved: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    supply(overrides?: CallOverrides): Promise<BigNumber>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -1131,6 +997,8 @@ export interface NFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    uri(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1145,16 +1013,6 @@ export interface NFT extends BaseContract {
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    buyNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    cancelNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     description(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1176,8 +1034,10 @@ export interface NFT extends BaseContract {
       _name: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       _marketplaceAddr: PromiseOrValue<string>,
-      _nativeNftAddr: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1190,8 +1050,7 @@ export interface NFT extends BaseContract {
     marketplaceAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mintNft(
-      _metadataUri: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1203,11 +1062,7 @@ export interface NFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    putNftForSale(
-      _id: PromiseOrValue<BigNumberish>,
-      _price: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -1229,6 +1084,8 @@ export interface NFT extends BaseContract {
       approved: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    supply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
@@ -1261,5 +1118,7 @@ export interface NFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    uri(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

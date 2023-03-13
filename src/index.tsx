@@ -7,7 +7,7 @@ import { ThemeProvider } from "./themes";
 import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
 import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
 import { Index } from "./pages";
-import { Explore } from "./pages/explore";
+import { Sale, Auction } from "./pages/explore";
 import { Collection } from "./pages/collection/[slug]";
 import { LaunchPad } from "./pages/launchpad";
 import { User } from "./pages/user/[pubkey]";
@@ -27,7 +27,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { MarketplaceProvider } from "./context/MarketplaceProvider";
 import { Toaster } from "react-hot-toast";
-
 
 function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
   return new Web3Provider(provider);
@@ -80,7 +79,8 @@ function App() {
                 <Submissions />
               </Route>  */}
                 <Route path="/" element={<Index />} />
-                <Route path="/explore" element={<Explore />} />
+                <Route path="/explore/sale" element={<Sale />} />
+                <Route path="/explore/auction" element={<Auction />} />
                 <Route path="/collection/:slug" element={<Collection />} />
                 <Route path="/user/:pubkey" element={<User />} />
                 <Route path="/t/:pubkey" element={<MyToken />} />

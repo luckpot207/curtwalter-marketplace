@@ -219,7 +219,7 @@ export default function CollectionHeader(props: {
         className="w-full h-52 object-center object-cover"
       />
       <div className="flex flex-col items-center justify-center -mt-24 relative">
-        <Link to={"/collection/" + props.collection?.nftContractAddr}>
+        <Link to={"/collection/" + props.collection?.contractAddress}>
           <Image src={Nft} alt="" />
         </Link>
         {/* <LinksGroup

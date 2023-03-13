@@ -30,8 +30,11 @@ export interface NftCollection {
   name: string;
   symbol: string;
   description: string;
+  uri: string;
+  price: string;
+  supply: string;
   author: string;
-  nftContractAddr: string;
+  contractAddress: string;
   nftsInCollection: Array<Nft>;
 }
 

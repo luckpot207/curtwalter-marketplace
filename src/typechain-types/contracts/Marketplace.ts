@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -26,12 +27,40 @@ import type {
   OnEvent,
   PromiseOrValue,
 } from "../common";
-import { StringLiteralLike } from "typescript";
 
 export declare namespace Marketplace {
-  export type AuctionDataStruct = {
+  export type AuctionStruct = {
     author: PromiseOrValue<string>;
-    auctionAddr: PromiseOrValue<string>;
+    contractAddress: PromiseOrValue<string>;
+    tokenId: PromiseOrValue<BigNumberish>;
+    highestBidder: PromiseOrValue<string>;
+    highestBid: PromiseOrValue<BigNumberish>;
+    endTime: PromiseOrValue<BigNumberish>;
+    isActive: PromiseOrValue<boolean>;
+  };
+
+  export type AuctionStructOutput = [
+    string,
+    string,
+    BigNumber,
+    string,
+    BigNumber,
+    BigNumber,
+    boolean
+  ] & {
+    author: string;
+    contractAddress: string;
+    tokenId: BigNumber;
+    highestBidder: string;
+    highestBid: BigNumber;
+    endTime: BigNumber;
+    isActive: boolean;
+  };
+
+  export type AuctionOutputStruct = {
+    auctionId: PromiseOrValue<BigNumberish>;
+    author: PromiseOrValue<string>;
+    contractAddress: PromiseOrValue<string>;
     tokenId: PromiseOrValue<BigNumberish>;
     tokenUri: PromiseOrValue<string>;
     highestBidder: PromiseOrValue<string>;
@@ -40,7 +69,8 @@ export declare namespace Marketplace {
     isActive: PromiseOrValue<boolean>;
   };
 
-  export type AuctionDataStructOutput = [
+  export type AuctionOutputStructOutput = [
+    BigNumber,
     string,
     string,
     BigNumber,
@@ -50,8 +80,9 @@ export declare namespace Marketplace {
     BigNumber,
     boolean
   ] & {
+    auctionId: BigNumber;
     author: string;
-    auctionAddr: string;
+    contractAddress: string;
     tokenId: BigNumber;
     tokenUri: string;
     highestBidder: string;
@@ -60,231 +91,340 @@ export declare namespace Marketplace {
     isActive: boolean;
   };
 
-  export type NftStruct = {
+  export type CollectionStruct = {
+    author: PromiseOrValue<string>;
+    contractAddress: PromiseOrValue<string>;
+    title: PromiseOrValue<string>;
+    symbol: PromiseOrValue<string>;
+    description: PromiseOrValue<string>;
+    totalItems: PromiseOrValue<BigNumberish>;
+  };
+
+  export type CollectionStructOutput = [
+    string,
+    string,
+    string,
+    string,
+    string,
+    BigNumber
+  ] & {
+    author: string;
+    contractAddress: string;
+    title: string;
+    symbol: string;
+    description: string;
+    totalItems: BigNumber;
+  };
+
+  export type SaleStruct = {
+    author: PromiseOrValue<string>;
+    contractAddress: PromiseOrValue<string>;
     tokenId: PromiseOrValue<BigNumberish>;
-    metadataUri: PromiseOrValue<string>;
-    owner: PromiseOrValue<string>;
     price: PromiseOrValue<BigNumberish>;
   };
 
-  export type NftStructOutput = [BigNumber, string, string, BigNumber] & {
+  export type SaleStructOutput = [string, string, BigNumber, BigNumber] & {
+    author: string;
+    contractAddress: string;
     tokenId: BigNumber;
-    metadataUri: string;
-    owner: string;
     price: BigNumber;
   };
 
-  export type NftCollectionStruct = {
-    name: PromiseOrValue<string>;
-    symbol: PromiseOrValue<string>;
-    description: PromiseOrValue<string>;
+  export type SaleOutputStruct = {
+    saleId: PromiseOrValue<BigNumberish>;
     author: PromiseOrValue<string>;
-    nftContractAddr: PromiseOrValue<string>;
-    nftsInCollection: Marketplace.NftStruct[];
+    contractAddress: PromiseOrValue<string>;
+    tokenId: PromiseOrValue<BigNumberish>;
+    price: PromiseOrValue<BigNumberish>;
+    tokenUri: PromiseOrValue<string>;
   };
 
-  export type NftCollectionStructOutput = [
+  export type SaleOutputStructOutput = [
+    BigNumber,
     string,
     string,
-    string,
-    string,
-    string,
-    Marketplace.NftStructOutput[]
+    BigNumber,
+    BigNumber,
+    string
   ] & {
-    name: string;
-    symbol: string;
-    description: string;
+    saleId: BigNumber;
     author: string;
-    nftContractAddr: string;
-    nftsInCollection: Marketplace.NftStructOutput[];
-  };
-
-  export type UserDataStructure = {
-    username: string;
-    sc_address: string;
-    image_src: string;
-    discord: string;
-    facebook: string;
-    instagram: string;
+    contractAddress: string;
+    tokenId: BigNumber;
+    price: BigNumber;
+    tokenUri: string;
   };
 }
 
 export interface MarketplaceInterface extends utils.Interface {
   functions: {
-    "auctionContractImplementation()": FunctionFragment;
-    "createAuctionContract(string,string,string)": FunctionFragment;
-    "createNftContract(string,string,string)": FunctionFragment;
-    "getAllAuctions()": FunctionFragment;
-    "getAllNftCollections()": FunctionFragment;
-    "getNftCollectionsWhereTokensOnSale()": FunctionFragment;
-    "getNftsCollectionsAuthored()": FunctionFragment;
-    "getNftsCollectionsWhereOwnerOwnsTokens()": FunctionFragment;
-    "nativeNftContractAddr()": FunctionFragment;
-    "nftContractImplementation()": FunctionFragment;
+    "auctionBid(uint256)": FunctionFragment;
+    "auctionCount()": FunctionFragment;
+    "auctionResolve(uint256)": FunctionFragment;
+    "buySale(uint256)": FunctionFragment;
+    "cancelSale(uint256)": FunctionFragment;
+    "collectionCount()": FunctionFragment;
+    "collectionImplementation()": FunctionFragment;
+    "createAuction(address,uint256,uint256,uint256)": FunctionFragment;
+    "createCollection(string,string,string,string,uint256,uint256)": FunctionFragment;
+    "createSale(address,uint256,uint256)": FunctionFragment;
+    "getAuctionById(uint256)": FunctionFragment;
+    "getAuctions()": FunctionFragment;
+    "getCollectionById(uint256)": FunctionFragment;
+    "getCollections()": FunctionFragment;
+    "getSaleById(uint256)": FunctionFragment;
+    "getSales()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "saleCount()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "auctionContractImplementation"
-      | "createAuctionContract"
-      | "createNftContract"
-      | "getAllAuctions"
-      | "getAllNftCollections"
-      | "getNftCollectionsWhereTokensOnSale"
-      | "getNftsCollectionsAuthored"
-      | "getNftsCollectionsWhereOwnerOwnsTokens"
-      | "nativeNftContractAddr"
-      | "nftContractImplementation"
+      | "auctionBid"
+      | "auctionCount"
+      | "auctionResolve"
+      | "buySale"
+      | "cancelSale"
+      | "collectionCount"
+      | "collectionImplementation"
+      | "createAuction"
+      | "createCollection"
+      | "createSale"
+      | "getAuctionById"
+      | "getAuctions"
+      | "getCollectionById"
+      | "getCollections"
+      | "getSaleById"
+      | "getSales"
       | "owner"
       | "renounceOwnership"
+      | "saleCount"
       | "transferOwnership"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "auctionContractImplementation",
+    functionFragment: "auctionBid",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "auctionCount",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "createAuctionContract",
+    functionFragment: "auctionResolve",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "buySale",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "cancelSale",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "collectionCount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "collectionImplementation",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createAuction",
     values: [
       PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "createNftContract",
+    functionFragment: "createCollection",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "getAllAuctions",
+    functionFragment: "createSale",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAuctionById",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAuctions",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getAllNftCollections",
+    functionFragment: "getCollectionById",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCollections",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getNftCollectionsWhereTokensOnSale",
-    values?: undefined
+    functionFragment: "getSaleById",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "getNftsCollectionsAuthored",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getNftsCollectionsWhereOwnerOwnsTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nativeNftContractAddr",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nftContractImplementation",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "getSales", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "saleCount", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(functionFragment: "auctionBid", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "auctionContractImplementation",
+    functionFragment: "auctionCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createAuctionContract",
+    functionFragment: "auctionResolve",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "buySale", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "cancelSale", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "collectionCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createNftContract",
+    functionFragment: "collectionImplementation",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getAllAuctions",
+    functionFragment: "createAuction",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getAllNftCollections",
+    functionFragment: "createCollection",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "createSale", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAuctionById",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getNftCollectionsWhereTokensOnSale",
+    functionFragment: "getAuctions",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getNftsCollectionsAuthored",
+    functionFragment: "getCollectionById",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getNftsCollectionsWhereOwnerOwnsTokens",
+    functionFragment: "getCollections",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "nativeNftContractAddr",
+    functionFragment: "getSaleById",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "nftContractImplementation",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "getSales", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "saleCount", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 
   events: {
-    "AuctionContractCreated(address,address)": EventFragment;
+    "AuctionCreated(address,address,uint256,uint256)": EventFragment;
+    "AuctionNewBid(address,address,uint256)": EventFragment;
+    "AuctionResolved(address,uint256,address)": EventFragment;
+    "CollectionCreated(address,address)": EventFragment;
     "CommissionReceivedByMarketplace(uint256)": EventFragment;
-    "NftBought(address,uint256,address,uint256)": EventFragment;
-    "NftContractCreated(address,address)": EventFragment;
-    "NftMinted(address,uint256,address,string)": EventFragment;
-    "NftOnSale(address,uint256,uint256)": EventFragment;
-    "NftSaleCancel(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "SaleCanceled(address,address,uint256)": EventFragment;
+    "SaleCreated(address,address,uint256,uint256)": EventFragment;
+    "SaleSuccessed(address,address,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AuctionContractCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AuctionCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AuctionNewBid"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AuctionResolved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CollectionCreated"): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "CommissionReceivedByMarketplace"
   ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftBought"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftContractCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftMinted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftOnSale"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NftSaleCancel"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SaleCanceled"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SaleCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SaleSuccessed"): EventFragment;
 }
 
-export interface AuctionContractCreatedEventObject {
-  contractAddr: string;
+export interface AuctionCreatedEventObject {
   author: string;
+  contractAddress: string;
+  tokenId: BigNumber;
+  auctionId: BigNumber;
 }
-export type AuctionContractCreatedEvent = TypedEvent<
-  [string, string],
-  AuctionContractCreatedEventObject
+export type AuctionCreatedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber],
+  AuctionCreatedEventObject
 >;
 
-export type AuctionContractCreatedEventFilter =
-  TypedEventFilter<AuctionContractCreatedEvent>;
+export type AuctionCreatedEventFilter = TypedEventFilter<AuctionCreatedEvent>;
+
+export interface AuctionNewBidEventObject {
+  contractAddress: string;
+  bidder: string;
+  amount: BigNumber;
+}
+export type AuctionNewBidEvent = TypedEvent<
+  [string, string, BigNumber],
+  AuctionNewBidEventObject
+>;
+
+export type AuctionNewBidEventFilter = TypedEventFilter<AuctionNewBidEvent>;
+
+export interface AuctionResolvedEventObject {
+  contractAddress: string;
+  tokenId: BigNumber;
+  winner: string;
+}
+export type AuctionResolvedEvent = TypedEvent<
+  [string, BigNumber, string],
+  AuctionResolvedEventObject
+>;
+
+export type AuctionResolvedEventFilter = TypedEventFilter<AuctionResolvedEvent>;
+
+export interface CollectionCreatedEventObject {
+  author: string;
+  contractAddress: string;
+}
+export type CollectionCreatedEvent = TypedEvent<
+  [string, string],
+  CollectionCreatedEventObject
+>;
+
+export type CollectionCreatedEventFilter =
+  TypedEventFilter<CollectionCreatedEvent>;
 
 export interface CommissionReceivedByMarketplaceEventObject {
   commission: BigNumber;
@@ -297,67 +437,6 @@ export type CommissionReceivedByMarketplaceEvent = TypedEvent<
 export type CommissionReceivedByMarketplaceEventFilter =
   TypedEventFilter<CommissionReceivedByMarketplaceEvent>;
 
-export interface NftBoughtEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-  boughtBy: string;
-  price: BigNumber;
-}
-export type NftBoughtEvent = TypedEvent<
-  [string, BigNumber, string, BigNumber],
-  NftBoughtEventObject
->;
-
-export type NftBoughtEventFilter = TypedEventFilter<NftBoughtEvent>;
-
-export interface NftContractCreatedEventObject {
-  contractAddr: string;
-  author: string;
-}
-export type NftContractCreatedEvent = TypedEvent<
-  [string, string],
-  NftContractCreatedEventObject
->;
-
-export type NftContractCreatedEventFilter =
-  TypedEventFilter<NftContractCreatedEvent>;
-
-export interface NftMintedEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-  mintedTo: string;
-  tokenUri: string;
-}
-export type NftMintedEvent = TypedEvent<
-  [string, BigNumber, string, string],
-  NftMintedEventObject
->;
-
-export type NftMintedEventFilter = TypedEventFilter<NftMintedEvent>;
-
-export interface NftOnSaleEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-  price: BigNumber;
-}
-export type NftOnSaleEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  NftOnSaleEventObject
->;
-
-export type NftOnSaleEventFilter = TypedEventFilter<NftOnSaleEvent>;
-
-export interface NftSaleCancelEventObject {
-  nftContractAddress: string;
-  tokenId: BigNumber;
-}
-export type NftSaleCancelEvent = TypedEvent<
-  [string, BigNumber],
-  NftSaleCancelEventObject
->;
-
-export type NftSaleCancelEventFilter = TypedEventFilter<NftSaleCancelEvent>;
-
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
   newOwner: string;
@@ -369,6 +448,43 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface SaleCanceledEventObject {
+  author: string;
+  contractAddress: string;
+  tokenId: BigNumber;
+}
+export type SaleCanceledEvent = TypedEvent<
+  [string, string, BigNumber],
+  SaleCanceledEventObject
+>;
+
+export type SaleCanceledEventFilter = TypedEventFilter<SaleCanceledEvent>;
+
+export interface SaleCreatedEventObject {
+  author: string;
+  contractAddress: string;
+  tokenId: BigNumber;
+  price: BigNumber;
+}
+export type SaleCreatedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber],
+  SaleCreatedEventObject
+>;
+
+export type SaleCreatedEventFilter = TypedEventFilter<SaleCreatedEvent>;
+
+export interface SaleSuccessedEventObject {
+  newOwner: string;
+  contractAddress: string;
+  tokenId: BigNumber;
+}
+export type SaleSuccessedEvent = TypedEvent<
+  [string, string, BigNumber],
+  SaleSuccessedEventObject
+>;
+
+export type SaleSuccessedEventFilter = TypedEventFilter<SaleSuccessedEvent>;
 
 export interface Marketplace extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -397,45 +513,83 @@ export interface Marketplace extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    auctionContractImplementation(overrides?: CallOverrides): Promise<[string]>;
+    auctionBid(
+      _auctionId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    createAuctionContract(
-      _nftContract: PromiseOrValue<string>,
-      _nftId: PromiseOrValue<string>,
-      _startingBid: PromiseOrValue<string>,
+    auctionCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    auctionResolve(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    createNftContract(
-      _name: PromiseOrValue<string>,
+    buySale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    cancelSale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    collectionCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    collectionImplementation(overrides?: CallOverrides): Promise<[string]>;
+
+    createAuction(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _startingBid: PromiseOrValue<BigNumberish>,
+      _endTime: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    createCollection(
+      _title: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getAllAuctions(
+    createSale(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getAuctionById(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[Marketplace.AuctionDataStructOutput[]]>;
+    ): Promise<[Marketplace.AuctionStructOutput]>;
 
-    getAllNftCollections(
+    getAuctions(
       overrides?: CallOverrides
-    ): Promise<[Marketplace.NftCollectionStructOutput[]]>;
+    ): Promise<[Marketplace.AuctionOutputStructOutput[]]>;
 
-    getNftCollectionsWhereTokensOnSale(
+    getCollectionById(
+      _collectionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[Marketplace.NftCollectionStructOutput[]]>;
+    ): Promise<[Marketplace.CollectionStructOutput]>;
 
-    getNftsCollectionsAuthored(
+    getCollections(
       overrides?: CallOverrides
-    ): Promise<[Marketplace.NftCollectionStructOutput[]]>;
+    ): Promise<[Marketplace.CollectionStructOutput[]]>;
 
-    getNftsCollectionsWhereOwnerOwnsTokens(
+    getSaleById(
+      _saleId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[Marketplace.NftCollectionStructOutput[]]>;
+    ): Promise<[Marketplace.SaleStructOutput]>;
 
-    nativeNftContractAddr(overrides?: CallOverrides): Promise<[string]>;
-
-    nftContractImplementation(overrides?: CallOverrides): Promise<[string]>;
+    getSales(
+      overrides?: CallOverrides
+    ): Promise<[Marketplace.SaleOutputStructOutput[]]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -443,51 +597,91 @@ export interface Marketplace extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    saleCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  auctionContractImplementation(overrides?: CallOverrides): Promise<string>;
+  auctionBid(
+    _auctionId: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  createAuctionContract(
-    _nftContract: PromiseOrValue<string>,
-    _nftId: PromiseOrValue<string>,
-    _startingBid: PromiseOrValue<string>,
+  auctionCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  auctionResolve(
+    _auctionId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  createNftContract(
-    _name: PromiseOrValue<string>,
+  buySale(
+    _saleId: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  cancelSale(
+    _saleId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  collectionCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  collectionImplementation(overrides?: CallOverrides): Promise<string>;
+
+  createAuction(
+    _contractAddress: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _startingBid: PromiseOrValue<BigNumberish>,
+    _endTime: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  createCollection(
+    _title: PromiseOrValue<string>,
     _symbol: PromiseOrValue<string>,
     _description: PromiseOrValue<string>,
+    _uri: PromiseOrValue<string>,
+    _price: PromiseOrValue<BigNumberish>,
+    _supply: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getAllAuctions(
+  createSale(
+    _contractAddress: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _price: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getAuctionById(
+    _auctionId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<Marketplace.AuctionDataStructOutput[]>;
+  ): Promise<Marketplace.AuctionStructOutput>;
 
-  getAllNftCollections(
+  getAuctions(
     overrides?: CallOverrides
-  ): Promise<Marketplace.NftCollectionStructOutput[]>;
+  ): Promise<Marketplace.AuctionOutputStructOutput[]>;
 
-  getNftCollectionsWhereTokensOnSale(
+  getCollectionById(
+    _collectionId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<Marketplace.NftCollectionStructOutput[]>;
+  ): Promise<Marketplace.CollectionStructOutput>;
 
-  getNftsCollectionsAuthored(
+  getCollections(
     overrides?: CallOverrides
-  ): Promise<Marketplace.NftCollectionStructOutput[]>;
+  ): Promise<Marketplace.CollectionStructOutput[]>;
 
-  getNftsCollectionsWhereOwnerOwnsTokens(
+  getSaleById(
+    _saleId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<Marketplace.NftCollectionStructOutput[]>;
+  ): Promise<Marketplace.SaleStructOutput>;
 
-  nativeNftContractAddr(overrides?: CallOverrides): Promise<string>;
-
-  nftContractImplementation(overrides?: CallOverrides): Promise<string>;
+  getSales(
+    overrides?: CallOverrides
+  ): Promise<Marketplace.SaleOutputStructOutput[]>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -495,55 +689,97 @@ export interface Marketplace extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  saleCount(overrides?: CallOverrides): Promise<BigNumber>;
+
   transferOwnership(
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    auctionContractImplementation(overrides?: CallOverrides): Promise<string>;
-
-    createAuctionContract(
-      _nftContract: PromiseOrValue<string>,
-      _nftId: PromiseOrValue<string>,
-      _startingBid: PromiseOrValue<string>,
+    auctionBid(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    createNftContract(
-      _name: PromiseOrValue<string>,
+    auctionCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    auctionResolve(
+      _auctionId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    buySale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    cancelSale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    collectionCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    collectionImplementation(overrides?: CallOverrides): Promise<string>;
+
+    createAuction(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _startingBid: PromiseOrValue<BigNumberish>,
+      _endTime: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    createCollection(
+      _title: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getAllAuctions(
+    createSale(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<Marketplace.AuctionDataStructOutput[]>;
+    ): Promise<void>;
 
-    getAllNftCollections(
+    getAuctionById(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<Marketplace.NftCollectionStructOutput[]>;
+    ): Promise<Marketplace.AuctionStructOutput>;
 
-    getNftCollectionsWhereTokensOnSale(
+    getAuctions(
       overrides?: CallOverrides
-    ): Promise<Marketplace.NftCollectionStructOutput[]>;
+    ): Promise<Marketplace.AuctionOutputStructOutput[]>;
 
-    getNftsCollectionsAuthored(
+    getCollectionById(
+      _collectionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<Marketplace.NftCollectionStructOutput[]>;
+    ): Promise<Marketplace.CollectionStructOutput>;
 
-    getNftsCollectionsWhereOwnerOwnsTokens(
+    getCollections(
       overrides?: CallOverrides
-    ): Promise<Marketplace.NftCollectionStructOutput[]>;
+    ): Promise<Marketplace.CollectionStructOutput[]>;
 
-    nativeNftContractAddr(overrides?: CallOverrides): Promise<string>;
+    getSaleById(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<Marketplace.SaleStructOutput>;
 
-    nftContractImplementation(overrides?: CallOverrides): Promise<string>;
+    getSales(
+      overrides?: CallOverrides
+    ): Promise<Marketplace.SaleOutputStructOutput[]>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    saleCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
@@ -552,14 +788,49 @@ export interface Marketplace extends BaseContract {
   };
 
   filters: {
-    "AuctionContractCreated(address,address)"(
-      contractAddr?: PromiseOrValue<string> | null,
-      author?: PromiseOrValue<string> | null
-    ): AuctionContractCreatedEventFilter;
-    AuctionContractCreated(
-      contractAddr?: PromiseOrValue<string> | null,
-      author?: PromiseOrValue<string> | null
-    ): AuctionContractCreatedEventFilter;
+    "AuctionCreated(address,address,uint256,uint256)"(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      auctionId?: null
+    ): AuctionCreatedEventFilter;
+    AuctionCreated(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      auctionId?: null
+    ): AuctionCreatedEventFilter;
+
+    "AuctionNewBid(address,address,uint256)"(
+      contractAddress?: PromiseOrValue<string> | null,
+      bidder?: PromiseOrValue<string> | null,
+      amount?: null
+    ): AuctionNewBidEventFilter;
+    AuctionNewBid(
+      contractAddress?: PromiseOrValue<string> | null,
+      bidder?: PromiseOrValue<string> | null,
+      amount?: null
+    ): AuctionNewBidEventFilter;
+
+    "AuctionResolved(address,uint256,address)"(
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      winner?: PromiseOrValue<string> | null
+    ): AuctionResolvedEventFilter;
+    AuctionResolved(
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      winner?: PromiseOrValue<string> | null
+    ): AuctionResolvedEventFilter;
+
+    "CollectionCreated(address,address)"(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null
+    ): CollectionCreatedEventFilter;
+    CollectionCreated(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null
+    ): CollectionCreatedEventFilter;
 
     "CommissionReceivedByMarketplace(uint256)"(
       commission?: null
@@ -567,61 +838,6 @@ export interface Marketplace extends BaseContract {
     CommissionReceivedByMarketplace(
       commission?: null
     ): CommissionReceivedByMarketplaceEventFilter;
-
-    "NftBought(address,uint256,address,uint256)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      boughtBy?: null,
-      price?: null
-    ): NftBoughtEventFilter;
-    NftBought(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      boughtBy?: null,
-      price?: null
-    ): NftBoughtEventFilter;
-
-    "NftContractCreated(address,address)"(
-      contractAddr?: PromiseOrValue<string> | null,
-      author?: PromiseOrValue<string> | null
-    ): NftContractCreatedEventFilter;
-    NftContractCreated(
-      contractAddr?: PromiseOrValue<string> | null,
-      author?: PromiseOrValue<string> | null
-    ): NftContractCreatedEventFilter;
-
-    "NftMinted(address,uint256,address,string)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      mintedTo?: PromiseOrValue<string> | null,
-      tokenUri?: null
-    ): NftMintedEventFilter;
-    NftMinted(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      mintedTo?: PromiseOrValue<string> | null,
-      tokenUri?: null
-    ): NftMintedEventFilter;
-
-    "NftOnSale(address,uint256,uint256)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      price?: null
-    ): NftOnSaleEventFilter;
-    NftOnSale(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      price?: null
-    ): NftOnSaleEventFilter;
-
-    "NftSaleCancel(address,uint256)"(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): NftSaleCancelEventFilter;
-    NftSaleCancel(
-      nftContractAddress?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): NftSaleCancelEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
@@ -631,50 +847,123 @@ export interface Marketplace extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "SaleCanceled(address,address,uint256)"(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): SaleCanceledEventFilter;
+    SaleCanceled(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): SaleCanceledEventFilter;
+
+    "SaleCreated(address,address,uint256,uint256)"(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      price?: null
+    ): SaleCreatedEventFilter;
+    SaleCreated(
+      author?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      price?: null
+    ): SaleCreatedEventFilter;
+
+    "SaleSuccessed(address,address,uint256)"(
+      newOwner?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): SaleSuccessedEventFilter;
+    SaleSuccessed(
+      newOwner?: PromiseOrValue<string> | null,
+      contractAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): SaleSuccessedEventFilter;
   };
 
   estimateGas: {
-    auctionContractImplementation(
-      overrides?: CallOverrides
+    auctionBid(
+      _auctionId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    createAuctionContract(
-      _nftContract: PromiseOrValue<string>,
-      _nftId: PromiseOrValue<string>,
-      _startingBid: PromiseOrValue<string>,
+    auctionCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    auctionResolve(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    createNftContract(
-      _name: PromiseOrValue<string>,
+    buySale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    cancelSale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    collectionCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    collectionImplementation(overrides?: CallOverrides): Promise<BigNumber>;
+
+    createAuction(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _startingBid: PromiseOrValue<BigNumberish>,
+      _endTime: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    createCollection(
+      _title: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getAllAuctions(overrides?: CallOverrides): Promise<BigNumber>;
+    createSale(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
-    getAllNftCollections(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getNftCollectionsWhereTokensOnSale(
+    getAuctionById(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getNftsCollectionsAuthored(overrides?: CallOverrides): Promise<BigNumber>;
+    getAuctions(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getNftsCollectionsWhereOwnerOwnsTokens(
+    getCollectionById(
+      _collectionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    nativeNftContractAddr(overrides?: CallOverrides): Promise<BigNumber>;
+    getCollections(overrides?: CallOverrides): Promise<BigNumber>;
 
-    nftContractImplementation(overrides?: CallOverrides): Promise<BigNumber>;
+    getSaleById(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSales(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    saleCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
@@ -683,55 +972,87 @@ export interface Marketplace extends BaseContract {
   };
 
   populateTransaction: {
-    auctionContractImplementation(
-      overrides?: CallOverrides
+    auctionBid(
+      _auctionId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    createAuctionContract(
-      _nftContract: PromiseOrValue<string>,
-      _nftId: PromiseOrValue<string>,
-      _startingBid: PromiseOrValue<string>,
+    auctionCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    auctionResolve(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    createNftContract(
-      _name: PromiseOrValue<string>,
+    buySale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    cancelSale(
+      _saleId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    collectionCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    collectionImplementation(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    createAuction(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _startingBid: PromiseOrValue<BigNumberish>,
+      _endTime: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    createCollection(
+      _title: PromiseOrValue<string>,
       _symbol: PromiseOrValue<string>,
       _description: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      _price: PromiseOrValue<BigNumberish>,
+      _supply: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getAllAuctions(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    createSale(
+      _contractAddress: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
-    getAllNftCollections(
+    getAuctionById(
+      _auctionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getNftCollectionsWhereTokensOnSale(
+    getAuctions(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getCollectionById(
+      _collectionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getNftsCollectionsAuthored(
+    getCollections(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getSaleById(
+      _saleId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getNftsCollectionsWhereOwnerOwnsTokens(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nativeNftContractAddr(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nftContractImplementation(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getSales(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    saleCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,

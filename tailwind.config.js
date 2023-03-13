@@ -8,6 +8,7 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
     "./src/**/*.{html,js}",
     "./node_modules/flowbite/**/*.js",
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
   ],
   darkMode: "class", // or 'media' or 'class'
   theme: {

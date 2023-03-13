@@ -5,8 +5,6 @@ import React, { useState } from "react";
 import useMarketplaceContract from "../hooks/useMarketplaceContract";
 import { BigNumber, ethers } from "ethers";
 import { useContract, useSigner } from "wagmi";
-import { NFT_ABI } from "../utils/abi";
-import { MarketplaceAddressV2 } from "../utils/config";
 
 export type ItemShowField = "lastPrice" | "offerPrice";
 
@@ -111,7 +109,7 @@ export default function SaleToken(
   const { buySale } = useMarketplaceContract();
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const handleBuy = async (saleId: number, price: string) => {
+  const handleBuy = async (saleId: string, price: string) => {
     if (!signer) return;
     // console.log(">>>>.", ethers.utils.parseEther(price));
     setOpenModal(false);
@@ -214,7 +212,10 @@ export default function SaleToken(
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() =>
-                    handleBuy(props.saleId ?? 1, props.price?.toString() ?? "")
+                    handleBuy(
+                      props.saleId ?? "1",
+                      props.price?.toString() ?? ""
+                    )
                   }
                   className="focus:outline-none px-4 w-[80px] bg-teal-500 p-3 mr-3 rounded-lg text-white hover:bg-teal-400"
                 >

@@ -436,7 +436,7 @@ export interface TokenAPISimple {
   offerPrice?: string | number;
   last?: string | number;
   collectionId?: string;
-  saleId?: number;
+  saleId?: string;
 }
 
 export const TokenAPISimple_mintId = "mint_id";

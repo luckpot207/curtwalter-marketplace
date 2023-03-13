@@ -42,11 +42,11 @@ export function Hero() {
         </h1>
 
         <NavLink
-          to="/explore"
+          to="/explore/sale"
           className="mb-3 text-xl font-bold tracking-tight text-center md:text-left"
         >
           {/* {data?.collection?.title} */}
-          {"Piggy Sol Gang"}
+          {"Your First Token"}
         </NavLink>
 
         <p className="mb-3 font-normal text-justify md:text-left">

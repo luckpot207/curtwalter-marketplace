@@ -14,61 +14,40 @@ import {
   useProvider,
   useContract,
 } from "wagmi";
-import { Marketplace, NFT, MarketplaceV2 } from "../typechain-types/contracts";
+import { Marketplace, NFT } from "../typechain-types/contracts";
 import {
-  NftContractCreatedEvent,
-  AuctionContractCreatedEvent,
-} from "../typechain-types/contracts/Marketplace";
-import {
-  SaleCanceledEvent,
+  CollectionCreatedEvent,
   SaleCreatedEvent,
+  AuctionCreatedEvent,
+  SaleCanceledEvent,
+  AuctionNewBidEvent,
+  AuctionResolvedEvent,
   SaleSuccessedEvent,
-} from "../typechain-types/contracts/MarketplaceV2";
+} from "../typechain-types/contracts/Marketplace";
+
 import { CollectionV2, NftCollection as INftCollection } from "../types/nft";
-import {
-  MARKETPLACE_ABI,
-  NFTIMPLEMENT_ABI,
-  AUCTIONIMPLEMENT_ABI,
-  MarketplaceABIV2,
-} from "../utils/abi";
+import { MarketplaceABI, NftImplementABI } from "../utils/abi";
 import { dev } from "../utils/log";
-import {
-  MarketplaceAddressV2,
-  MARKETPLACE_ADDR,
-  NFTIMPLEMENT_ADDR,
-} from "../utils/config";
+import { MarketplaceAddress, NftImplementAddress } from "../utils/config";
 import { toast } from "react-hot-toast";
 import { decodeMetadataUri } from "../utils/nft";
 
-interface SaleOutput {
-  author: string;
-  nftContractAddr: string;
-  tokenId: BigNumber;
-  price: BigNumber;
-  saleId: number;
-}
-
 interface MarketplaceContextProps {
   marketplaceContract: Marketplace | null;
-  marketplaceContractV2: MarketplaceV2 | null;
-  nftImplementContract: NFT | null;
   marketplaceContractConn: Marketplace | null;
-  allNftCollections: Marketplace.NftCollectionStructOutput[];
-  allNftCollectionsWhereSignerOwnsTokens: Marketplace.NftCollectionStructOutput[];
-  allNftCollectionsAuthored: Marketplace.NftCollectionStructOutput[];
-  allNftCollectionsWhereTokenOnSale: Marketplace.NftCollectionStructOutput[];
-  allCollections: CollectionV2[];
-  allSales: SaleOutput[];
+  nftImplementContract: NFT | null;
+  allCollections: Marketplace.CollectionStructOutput[];
+  allSales: Marketplace.SaleOutputStructOutput[];
+  allAuctions: Marketplace.AuctionOutputStructOutput[];
+  allCollectionsForSale: CollectionV2[];
   refreshLoadedData: () => Promise<void>;
-  createNewNftCollection: (
+  createCollection: (
     name: string,
     symbol: string,
-    description: string
-  ) => Promise<NFT | null | undefined>;
-  createNewAuction: (
-    contract: string,
-    tokenId: string,
-    startingBid: string
+    description: string,
+    uri: string,
+    price: BigNumber,
+    supply: BigNumber
   ) => Promise<NFT | null | undefined>;
   createSale: (
     contract: string,
@@ -77,36 +56,48 @@ interface MarketplaceContextProps {
   ) => Promise<string | null | undefined>;
   cancelSale: (saleId: string) => Promise<string | null | undefined>;
   buySale: (
-    saleId: number,
+    saleId: string,
     price: string
   ) => Promise<string | null | undefined>;
+  createAuction: (
+    contract: string,
+    tokenId: string,
+    price: BigNumber,
+    endTime: number
+  ) => Promise<string | null | undefined>;
+  auctionBid: (
+    auctionId: string,
+    price: string
+  ) => Promise<string | null | undefined>;
+  auctionResolve: (auctionId: string) => Promise<string | null | undefined>;
   progressCreateNftCollection: boolean;
   progressCreateAuction: boolean;
   progressCreateSale: boolean;
-  getCollection: (address: string) => Promise<INftCollection | null>;
+  getCollectionForLaunchpad: (
+    address: string
+  ) => Promise<INftCollection | null>;
 }
 
 export const MarketplaceContext = createContext<MarketplaceContextProps>({
   marketplaceContract: null,
-  marketplaceContractV2: null,
-  nftImplementContract: null,
   marketplaceContractConn: null,
-  allNftCollections: [],
-  allNftCollectionsWhereSignerOwnsTokens: [],
-  allNftCollectionsAuthored: [],
-  allNftCollectionsWhereTokenOnSale: [],
+  nftImplementContract: null,
   allCollections: [],
   allSales: [],
+  allAuctions: [],
+  allCollectionsForSale: [],
   refreshLoadedData: async () => {},
-  createNewNftCollection: async () => null,
-  createNewAuction: async () => null,
+  createCollection: async () => null,
   createSale: async () => null,
   cancelSale: async () => null,
   buySale: async () => null,
+  auctionBid: async () => null,
+  auctionResolve: async () => null,
+  createAuction: async () => null,
   progressCreateNftCollection: false,
   progressCreateAuction: false,
   progressCreateSale: false,
-  getCollection: async () => null,
+  getCollectionForLaunchpad: async () => null,
 });
 
 export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
@@ -116,30 +107,22 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
 
   const [marketplaceContract, setMarketplaceContract] =
     useState<Marketplace | null>(null);
-  const [marketplaceContractV2, setMarketplaceContractV2] =
-    useState<MarketplaceV2 | null>(null);
-  const [marketplaceContractConnV2, setMarketplaceContractConnV2] =
-    useState<MarketplaceV2 | null>(null);
-  const [nftImplementContract, setNftImplementContract] =
-    useState<NFT | null>(null);
   const [marketplaceContractConn, setMarketplaceContractConn] =
     useState<Marketplace | null>(null);
-  const [allNftCollections, setAllNftCollections] = useState<
-    Marketplace.NftCollectionStructOutput[]
+  const [nftImplementContract, setNftImplementContract] =
+    useState<NFT | null>(null);
+  const [allCollections, setAllCollections] = useState<
+    Marketplace.CollectionStructOutput[]
   >([]);
-  const [
-    allNftCollectionsWhereSignerOwnsTokens,
-    setAllNftCollectionsWhereSignerOwnsTokens,
-  ] = useState<Marketplace.NftCollectionStructOutput[]>([]);
-  const [allNftCollectionsAuthored, setAllNftCollectionsAuthored] = useState<
-    Marketplace.NftCollectionStructOutput[]
+  const [allSales, setAllSales] = useState<
+    Marketplace.SaleOutputStructOutput[]
   >([]);
-  const [
-    allNftCollectionsWhereTokenOnSale,
-    setAllNftCollectionsWhereTokenOnSale,
-  ] = useState<Marketplace.NftCollectionStructOutput[]>([]);
-  const [allCollections, setAllCollections] = useState<CollectionV2[]>([]);
-  const [allSales, setAllSales] = useState<SaleOutput[]>([]);
+  const [allAuctions, setAllAuctions] = useState<
+    Marketplace.AuctionOutputStructOutput[]
+  >([]);
+  const [allCollectionsForSale, setAllCollectionsForSale] = useState<
+    CollectionV2[]
+  >([]);
   const [progressCreateNftCollection, setProgressCreateNftCollection] =
     useState<boolean>(false);
   const [progressCreateAuction, setProgressCreateAuction] =
@@ -150,24 +133,16 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!!provider) {
       const newMarketplaceContract: Marketplace = new Contract(
-        MARKETPLACE_ADDR,
-        MARKETPLACE_ABI,
+        MarketplaceAddress,
+        MarketplaceABI,
         provider
       ) as Marketplace;
 
       setMarketplaceContract(newMarketplaceContract);
 
-      const newMarketplaceContractV2: MarketplaceV2 = new Contract(
-        MarketplaceAddressV2,
-        MarketplaceABIV2,
-        provider
-      ) as MarketplaceV2;
-
-      setMarketplaceContractV2(newMarketplaceContractV2);
-
       const newNftImplementContract: NFT = new Contract(
-        NFTIMPLEMENT_ADDR,
-        NFTIMPLEMENT_ABI,
+        NftImplementAddress,
+        NftImplementABI,
         provider
       ) as NFT;
 
@@ -175,17 +150,11 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
     }
     if (!!signer) {
       const newMarketplaceContractConn: Marketplace = new Contract(
-        MARKETPLACE_ADDR,
-        MARKETPLACE_ABI,
+        MarketplaceAddress,
+        MarketplaceABI,
         signer
       ) as Marketplace;
       setMarketplaceContractConn(newMarketplaceContractConn);
-      const newMarketplaceContractConnV2: MarketplaceV2 = new Contract(
-        MarketplaceAddressV2,
-        MarketplaceABIV2,
-        signer
-      ) as MarketplaceV2;
-      setMarketplaceContractConnV2(newMarketplaceContractConnV2);
     } else {
       setMarketplaceContractConn(null);
     }
@@ -194,67 +163,34 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
   // Keep lists of NFT collections updated
   useEffect(() => {
     refreshLoadedData();
-    refreshLoadedDataV2();
   }, [marketplaceContract, marketplaceContractConn, isConnected]);
 
   // Function to refresh loaded data
   const refreshLoadedData = useCallback(async () => {
     if (!!marketplaceContract) {
-      const newAllNftCollections =
-        await marketplaceContract.getAllNftCollections();
-      setAllNftCollections(newAllNftCollections);
-    }
-
-    if (!!marketplaceContractConn) {
-      const newAllNftCollectionsWhereSignerOwnsTokens =
-        await marketplaceContractConn.getNftsCollectionsWhereOwnerOwnsTokens();
-      setAllNftCollectionsWhereSignerOwnsTokens(
-        newAllNftCollectionsWhereSignerOwnsTokens
-      );
-
-      const newAllNftCollectionsAuthored =
-        await marketplaceContractConn.getNftsCollectionsAuthored();
-      setAllNftCollectionsAuthored(newAllNftCollectionsAuthored);
-
-      const newAllNftCollectionsWhereTokenOnSale =
-        await marketplaceContractConn.getNftCollectionsWhereTokensOnSale();
-      setAllNftCollectionsWhereTokenOnSale(
-        newAllNftCollectionsWhereTokenOnSale
-      );
-    }
-  }, [marketplaceContract, marketplaceContractConn, isConnected]);
-
-  const refreshLoadedDataV2 = useCallback(async () => {
-    if (!!marketplaceContractV2) {
-      const sales = await marketplaceContractV2.getSales();
-      const newAllSales = sales.map((sale, idx) => ({
-        author: sale.author,
-        nftContractAddr: sale.nftContractAddr,
-        tokenId: sale.tokenId,
-        price: sale.price,
-        saleId: idx + 1,
-      }));
+      const newAllCollections = await marketplaceContract.getCollections();
+      setAllCollections(newAllCollections);
+      const newAllSales = await marketplaceContract.getSales();
       setAllSales(newAllSales);
+      const newAllAuctions = await marketplaceContract.getAuctions();
+      setAllAuctions(newAllAuctions);
+
       if (newAllSales.length > 0) {
         const countsByNftContractAddr = allSales.reduce<Record<string, number>>(
           (acc, sale) => {
-            if (sale.nftContractAddr in acc) {
-              acc[sale.nftContractAddr]++;
+            if (sale.contractAddress in acc) {
+              acc[sale.contractAddress]++;
             } else {
-              acc[sale.nftContractAddr] = 1;
+              acc[sale.contractAddress] = 1;
             }
             return acc;
           },
           {}
         );
-
         // create collection array from the countsByNftContractAddr object
         const collections: CollectionV2[] = await Promise.all(
           Object.entries(countsByNftContractAddr).map(async ([key, value]) => {
-            // const collection = await getCollectionById(key);
-            const collection = allSales.filter(
-              (sale) => sale.nftContractAddr == key
-            );
+            const sale = allSales.filter((sale) => sale.contractAddress == key);
             const obj: CollectionV2 = {
               id: key,
               slug: key,
@@ -262,45 +198,58 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
               thumbnail: "",
               totalItems: 5000,
               listedCount: value,
-              floorPrice: ethers.utils.formatEther(collection[0].price),
+              floorPrice: ethers.utils.formatEther(sale[0].price),
             } as CollectionV2;
             return obj;
             // console.log("collections", obj);
           })
         );
-        setAllCollections(collections);
+        setAllCollectionsForSale(collections);
       }
     }
-  }, [marketplaceContractV2, marketplaceContractConnV2, isConnected]);
+  }, [marketplaceContract, isConnected]);
 
   // Function to create new NFT collection
-  const createNewNftCollection = useCallback(
-    async (name: string, symbol: string, description: string) => {
+  const createCollection = useCallback(
+    async (
+      name: string,
+      symbol: string,
+      description: string,
+      uri: string,
+      price: BigNumber,
+      supply: BigNumber
+    ) => {
       if (!!marketplaceContractConn && signer) {
         try {
           setProgressCreateNftCollection(true);
-          const txn = await marketplaceContractConn.createNftContract(
+          const txn = await marketplaceContractConn.createCollection(
             name,
             symbol,
-            description
+            description,
+            uri,
+            price,
+            supply
           );
           const rcpt = await txn.wait();
-          const event: NftContractCreatedEvent = rcpt.events?.find(
-            (event) => event.event === "NftContractCreated"
-          ) as NftContractCreatedEvent;
-          const nftContractCloneAddr = event.args.contractAddr;
+          const event: CollectionCreatedEvent = rcpt.events?.find(
+            (event) => event.event === "CollectionCreated"
+          ) as CollectionCreatedEvent;
+          const author = event.args.author;
+          const nftContractCloneAddr = event.args.contractAddress;
           const nftContractClone = new Contract(
             nftContractCloneAddr,
-            NFTIMPLEMENT_ABI,
+            NftImplementABI,
             signer
           ) as NFT;
           await refreshLoadedData();
           setProgressCreateNftCollection(false);
-          toast.success("NFT COLLECTION CREATED!");
+          toast.success(
+            `NFT collection(${nftContractCloneAddr}) created by ${author}!`
+          );
           return nftContractClone;
         } catch (e) {
           dev.error(e);
-          toast.error("ERROR!");
+          toast.error("NFT collection creation error!");
           setProgressCreateNftCollection(false);
         }
       } else {
@@ -311,77 +260,36 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
     [marketplaceContractConn, signer]
   );
 
-  // Function to create new NFT collection
-  const createNewAuction = useCallback(
-    async (contractAddress: string, tokenId: string, startingBid: string) => {
-      if (!!marketplaceContractConn && signer) {
-        try {
-          setProgressCreateAuction(true);
-          const txn = await marketplaceContractConn.createAuctionContract(
-            contractAddress,
-            tokenId,
-            startingBid
-          );
-          const rcpt = await txn.wait();
-          const event: AuctionContractCreatedEvent = rcpt.events?.find(
-            (event) => event.event === "AuctionContractCreated"
-          ) as AuctionContractCreatedEvent;
-          const auctionContractCloneAddr = event.args.contractAddr;
-          const auctionContractClone = new Contract(
-            auctionContractCloneAddr,
-            AUCTIONIMPLEMENT_ABI,
-            signer
-          ) as NFT;
-          await refreshLoadedData();
-          setProgressCreateAuction(false);
-          // toast({
-          //   title: "AUCTION CREATED!",
-          //   status: "success",
-          //   description: "Your new NFT auction has been created. Redirecting you now..."
-          // });
-          return auctionContractClone;
-        } catch (e) {
-          dev.error(e);
-          // toast({
-          //   title: "ERROR!",
-          //   status: "error",
-          //   description: "Your new NFT auction could not be created. Please try again"
-          // });
-          setProgressCreateNftCollection(false);
-        }
-      } else {
-        return null;
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [marketplaceContractConn, signer]
-  );
-
-  const getCollection = useCallback(
+  const getCollectionForLaunchpad = useCallback(
     async (contractAddress: string) => {
       if (!!provider) {
-        console.log("here >>>>>>", contractAddress);
-        const nftContractAddr: string = contractAddress;
         const nftContract: NFT = new Contract(
-          nftContractAddr,
-          NFTIMPLEMENT_ABI,
+          contractAddress,
+          NftImplementABI,
           provider
         ) as NFT;
         const nftsUnstruct = await nftContract.getAllNfts();
 
-        const [name, symbol, description, author] = await Promise.all([
-          nftContract.name(),
-          nftContract.symbol(),
-          nftContract.description(),
-          nftContract.authorAddr(),
-        ]);
+        const [name, symbol, description, uri, price, supply, author] =
+          await Promise.all([
+            nftContract.name(),
+            nftContract.symbol(),
+            nftContract.description(),
+            nftContract.uri(),
+            nftContract.price(),
+            nftContract.supply(),
+            nftContract.authorAddr(),
+          ]);
 
         const nftCollection: INftCollection = {
           name,
           symbol,
           description,
+          uri,
+          price: ethers.utils.formatEther(price),
+          supply: ethers.utils.formatEther(supply),
           author,
-          nftContractAddr,
+          contractAddress,
           nftsInCollection: nftsUnstruct[0].map((tokenId, index) => ({
             tokenId: tokenId.toString(),
             tokenUri: decodeMetadataUri(nftsUnstruct[1][index]),
@@ -399,10 +307,10 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
 
   const createSale = useCallback(
     async (contractAddress: string, tokenId: string, price: BigNumber) => {
-      if (!!marketplaceContractConnV2 && signer) {
+      if (!!marketplaceContractConn && signer) {
         try {
           setProgressCreateSale(true);
-          const txn = await marketplaceContractConnV2.createSale(
+          const txn = await marketplaceContractConn.createSale(
             contractAddress,
             tokenId,
             price,
@@ -426,15 +334,15 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [marketplaceContractConnV2, signer]
+    [marketplaceContractConn, signer]
   );
 
   const cancelSale = useCallback(
     async (saleId: string) => {
-      if (!!marketplaceContractConnV2 && signer) {
+      if (!!marketplaceContractConn && signer) {
         try {
           setProgressCreateSale(true);
-          const txn = await marketplaceContractConnV2.cancelSale(saleId, {
+          const txn = await marketplaceContractConn.cancelSale(saleId, {
             gasLimit: 1000000,
           });
           const rcpt = await txn.wait();
@@ -455,15 +363,15 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [marketplaceContractConnV2, signer]
+    [marketplaceContractConn, signer]
   );
 
   const buySale = useCallback(
-    async (saleId: number, price: string) => {
-      if (!!marketplaceContractConnV2 && signer) {
+    async (saleId: string, price: string) => {
+      if (!!marketplaceContractConn && signer) {
         try {
           setProgressCreateSale(true);
-          const txn = await marketplaceContractConnV2.buySale(saleId, {
+          const txn = await marketplaceContractConn.buySale(saleId, {
             gasLimit: 1000000,
             value: ethers.utils.parseEther(price),
           });
@@ -472,11 +380,11 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
             (event) => event.event === "SaleSuccessed"
           ) as SaleSuccessedEvent;
           const newOwner = event.args.newOwner;
-          const nftContractAddress = event.args.nftContractAddress;
+          const contractAddress = event.args.contractAddress;
           const tokenId = event.args.tokenId;
           setProgressCreateSale(false);
           toast.success(
-            `${newOwner} bought the NFT : ${tokenId} in ${nftContractAddress}`
+            `Bought the NFT by ${newOwner}: ${tokenId} in ${contractAddress}`
           );
           return newOwner;
         } catch (e) {
@@ -489,73 +397,129 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [marketplaceContractConnV2, signer]
+    [marketplaceContractConn, signer]
   );
 
-  const getCollectionById = useCallback(
-    async (nftContractAddr: string) => {
-      if (allSales.length > 0) {
-        const sales = allSales.filter(
-          (sale) => sale.nftContractAddr == nftContractAddr
-        );
-        return sales;
+  const createAuction = useCallback(
+    async (
+      contractAddress: string,
+      tokenId: string,
+      startingBid: BigNumber,
+      endTime: number
+    ) => {
+      if (!!marketplaceContractConn && signer) {
+        try {
+          setProgressCreateSale(true);
+          const txn = await marketplaceContractConn.createAuction(
+            contractAddress,
+            tokenId,
+            startingBid,
+            endTime
+            // { gasLimit: 1000000 }
+          );
+          const rcpt = await txn.wait();
+          const event: AuctionCreatedEvent = rcpt.events?.find(
+            (event) => event.event === "AuctionCreated"
+          ) as AuctionCreatedEvent;
+          const { author, auctionId } = event.args;
+          setProgressCreateSale(false);
+          toast.success(`Auction ${auctionId} Created by ${author}`);
+          return author;
+        } catch (e) {
+          dev.error(e);
+          toast.error("Auction: Your Auction creation is broken.");
+          setProgressCreateSale(false);
+        }
       } else {
-        return [];
+        return null;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [allSales]
+    [marketplaceContractConn, signer]
   );
 
-  const getCollections = useCallback(async () => {
-    if (allSales.length > 0) {
-      const countsByNftContractAddr = allSales.reduce<Record<string, number>>(
-        (acc, sale) => {
-          if (sale.nftContractAddr in acc) {
-            acc[sale.nftContractAddr]++;
-          } else {
-            acc[sale.nftContractAddr] = 1;
-          }
-          return acc;
-        },
-        {}
-      );
-      console.log(countsByNftContractAddr);
-      for (const [key, value] of Object.entries(countsByNftContractAddr)) {
-        console.log(`${key}: ${value}`);
+  const auctionBid = useCallback(
+    async (auctionId: string, price: string) => {
+      if (!!marketplaceContractConn && signer) {
+        try {
+          setProgressCreateSale(true);
+          const txn = await marketplaceContractConn.auctionBid(auctionId, {
+            gasLimit: 1000000,
+            value: ethers.utils.parseEther(price),
+          });
+          const rcpt = await txn.wait();
+          const event: AuctionNewBidEvent = rcpt.events?.find(
+            (event) => event.event === "AuctionCreated"
+          ) as AuctionNewBidEvent;
+          const { bidder, amount } = event.args;
+          setProgressCreateSale(false);
+          toast.success(`New Bid(${amount}) by ${bidder}`);
+          return bidder;
+        } catch (e) {
+          dev.error(e);
+          toast.error("Auction: Your bid is fallen.");
+          setProgressCreateSale(false);
+        }
+      } else {
+        return null;
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [marketplaceContractConn, signer]
+  );
 
-      // return sales;
-    } else {
-      return [];
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allSales]);
+  const auctionResolve = useCallback(
+    async (auctionId: string) => {
+      if (!!marketplaceContractConn && signer) {
+        try {
+          setProgressCreateSale(true);
+          const txn = await marketplaceContractConn.auctionResolve(
+            auctionId
+            // { gasLimit: 1000000 }
+          );
+          const rcpt = await txn.wait();
+          const event: AuctionResolvedEvent = rcpt.events?.find(
+            (event) => event.event === "AuctionCreated"
+          ) as AuctionResolvedEvent;
+          const { winner } = event.args;
+          setProgressCreateSale(false);
+          toast.success(`Auction resolved, Winner is ${winner}`);
+          return winner;
+        } catch (e) {
+          dev.error(e);
+          toast.error("Auction: Auction resovle is broken.");
+          setProgressCreateSale(false);
+        }
+      } else {
+        return null;
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [marketplaceContractConn, signer]
+  );
 
   return (
     <MarketplaceContext.Provider
       value={{
         marketplaceContract,
-        marketplaceContractV2,
-        nftImplementContract,
         marketplaceContractConn,
-        allNftCollections,
-        allNftCollectionsWhereSignerOwnsTokens,
-        allNftCollectionsAuthored,
-        allNftCollectionsWhereTokenOnSale,
+        nftImplementContract,
         allCollections,
         allSales,
+        allAuctions,
+        allCollectionsForSale,
         refreshLoadedData,
-        createNewNftCollection,
-        createNewAuction,
+        createCollection,
         createSale,
         cancelSale,
         buySale,
-        // getCollectionById,
+        createAuction,
+        auctionBid,
+        auctionResolve,
         progressCreateNftCollection,
         progressCreateAuction,
         progressCreateSale,
-        getCollection,
+        getCollectionForLaunchpad,
       }}
     >
       {children}

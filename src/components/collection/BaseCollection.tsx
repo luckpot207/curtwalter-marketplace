@@ -8,7 +8,7 @@ import solanaLogo from "../../solana.svg";
 import { Image, imageProxyUrl } from "../../componentsV3/image/Image";
 import { CollectionV2 } from "../../types/nft";
 import { useContract, useSigner, useContractRead } from "wagmi";
-import { NFT_ABI } from "../../utils/abi";
+import { NftABI } from "../../utils/abi";
 import useMarketplaceContract from "../../hooks/useMarketplaceContract";
 import { ethers } from "ethers";
 
@@ -22,7 +22,7 @@ export function BaseCollection({
   const { data: signer } = useSigner();
   const nftContract = useContract({
     address: collection.slug,
-    abi: NFT_ABI,
+    abi: NftABI,
     signerOrProvider: signer,
   });
   const { allSales } = useMarketplaceContract();
@@ -33,7 +33,7 @@ export function BaseCollection({
   const getThumbnail = async () => {
     if (!nftContract) return;
     const nfts = allSales.filter(
-      (sale) => sale.nftContractAddr == collection.slug
+      (sale) => sale.contractAddress == collection.slug
     );
     const tokenUri = await nftContract.tokenURI(nfts[0].tokenId);
 

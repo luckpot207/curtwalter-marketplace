@@ -5,22 +5,22 @@ import { MetadataObj, Nft } from "../types/nft";
 import { isStringsEqualCaseInsensitive } from "./string";
 
 // Function to structurise a single NFT collection
-export const structureIntoNftColl = (nftsInCollection: Array<Marketplace.NftStructOutput>): Array<Marketplace.NftStruct> => nftsInCollection.map(({ tokenId, metadataUri, owner, price }) => ({
-  tokenId: tokenId.toString(),
-  metadataUri,
-  owner,
-  price: price.toString()
-}));
+// export const structureIntoNftColl = (nftsInCollection: Array<Marketplace.NftStructOutput>): Array<Marketplace.NftStruct> => nftsInCollection.map(({ tokenId, metadataUri, owner, price }) => ({
+//   tokenId: tokenId.toString(),
+//   metadataUri,
+//   owner,
+//   price: price.toString()
+// }));
 
-// Function to structurise NFT collections array
-export const structureIntoNftColls = (nftCollsUnstructured: Marketplace.NftCollectionStructOutput[]): Array<Marketplace.NftCollectionStruct> => nftCollsUnstructured.map(({ author, description, name, symbol, nftsInCollection, nftContractAddr }) => ({
-  name,
-  symbol,
-  description,
-  author,
-  nftContractAddr,
-  nftsInCollection: structureIntoNftColl(nftsInCollection)
-}));
+// // Function to structurise NFT collections array
+// export const structureIntoNftColls = (nftCollsUnstructured: Marketplace.NftCollectionStructOutput[]): Array<Marketplace.NftCollectionStruct> => nftCollsUnstructured.map(({ author, description, name, symbol, nftsInCollection, nftContractAddr }) => ({
+//   name,
+//   symbol,
+//   description,
+//   author,
+//   nftContractAddr,
+//   nftsInCollection: structureIntoNftColl(nftsInCollection)
+// }));
 
 // Function to get metadata json from base64 encoded form
 export const decodeMetadataUri = (metadataUriB64String: string): MetadataObj => {

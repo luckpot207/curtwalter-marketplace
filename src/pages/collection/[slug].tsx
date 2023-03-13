@@ -25,11 +25,11 @@ import useMarketplaceContract from "../../hooks/useMarketplaceContract";
 import { NftCollection as INftCollection } from "../../types/nft";
 import { BigNumber, ethers } from "ethers";
 import { useContract, useSigner } from "wagmi";
-import { NFT_ABI } from "../../utils/abi";
+import { NftABI } from "../../utils/abi";
 
 export function Collection() {
   const { slug } = useParams<{ slug: string }>();
-  const { getCollection, allSales } = useMarketplaceContract();
+  const { allSales } = useMarketplaceContract();
   const [collection, setCollection] = useState<INftCollection | null>(null);
   const [tokenList, setTokenList] = useState<TokenAPISimple[]>([]);
   const [expectedTokenCount, setExpectedTokenCount] = useState<number>(0);
@@ -37,30 +37,30 @@ export function Collection() {
   const { data: signer } = useSigner();
   const nftContract = useContract({
     address: slug,
-    abi: NFT_ABI,
+    abi: NftABI,
     signerOrProvider: signer,
   });
 
   const getCollectionData = async (address: string) => {
-    const nfts = allSales.filter((sale) => sale.nftContractAddr == address);
+    const nfts = allSales.filter((sale) => sale.contractAddress == address);
     // const collection = await getCollection(address);
     // setCollection(collection);
     if (nfts.length && nftContract) {
       setExpectedTokenCount(nfts.length);
       const tokenlist: TokenAPISimple[] = await Promise.all(
         nfts.map(async (nft) => {
-          const metadataUri = await nftContract.tokenURI(nft.tokenId);
-          const metadata = await fetch(metadataUri).then((res) => res.json());
+          // const metadataUri = await nftContract.tokenURI(nft.tokenId);
+          // const metadata = await fetch(metadataUri).then((res) => res.json());
           return {
             mintId: nft.tokenId.toString(),
-            title: metadata.name,
-            image: metadata.image,
+            title: nft.tokenId.toString(),
+            image: nft.tokenUri,
             listedForSale: true,
             price: ethers.utils.formatEther(nft.price),
             offerPrice: ethers.utils.formatEther(nft.price),
             last: ethers.utils.formatEther(nft.price),
-            collectionId: nft.nftContractAddr,
-            saleId: nft.saleId,
+            collectionId: nft.contractAddress,
+            saleId: nft.saleId.toString(),
           };
         })
       );
