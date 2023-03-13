@@ -24,7 +24,7 @@ import { Marketplace } from "../../typechain-types";
 import { decodeMetadataUri, getIpfsFileUri } from "../../utils/nft";
 
 export function Sale() {
-  const { allCollections } = useMarketplaceContract();
+  const { allCollectionsForSale } = useMarketplaceContract();
   const { isConnected } = useAccount();
 
   const url = window.location.pathname;
@@ -311,7 +311,7 @@ export function Sale() {
           </div>
         </div>
         <div className="mt-4 gap-y-12 gap-x-3 grid grid-cols-1 md:gap-y-4 sm:grid-cols-2 md:grid-cols-3 md:gap-x-3 lg:gap-y-8 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 lg:gap-x-3 mb-16">
-          {allCollections.map((item: any) => (
+          {allCollectionsForSale.map((item: any) => (
             <BaseCollection key={item.id} collection={item} />
           ))}
           {collectionListNextPage && (

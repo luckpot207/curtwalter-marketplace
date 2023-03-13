@@ -204,8 +204,6 @@ export function User() {
   // const { user } = useSelector((data) => ({
   //   user: data.user,
   // }));
-  const [nfts, setNfts] = useState();
-  const user = test_user;
   const {
     userNFTS,
     escrowAccounts: escrows,

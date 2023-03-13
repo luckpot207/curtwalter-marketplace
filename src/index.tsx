@@ -1,18 +1,7 @@
 import "./polyfills";
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { NotificationOverlay } from "./components/notifications";
-import { ThemeProvider } from "./themes";
-import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
-import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
-import { Index } from "./pages";
-import { Launches } from "./pages/launches";
-import { Auction, Sale } from "./pages/explore";
-import { Collection } from "./pages/collection/[slug]";
-import { ApplyLaunchPad } from "./pages/applyLaunchpad";
-import { User } from "./pages/user/[pubkey]";
-import { Token } from "./pages/launchpad";
 
 import {
   ExternalProvider,
@@ -26,12 +15,19 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { MarketplaceProvider } from "./context/MarketplaceProvider";
 import { Toaster } from "react-hot-toast";
-
-function getLibrary(provider: ExternalProvider | JsonRpcFetchFunc) {
-  return new Web3Provider(provider);
-}
+import { useCreateStore, Provider as ZustandProvider } from "./lib/store";
+import { ThemeProvider } from "./themes";
+import { NotificationOverlay } from "./components/notifications";
+import { WalletProvider } from "./componentsV3/wallet/WalletProvider";
+import { MarketplaceProvider } from "./context/MarketplaceProvider";
+import { Index } from "./pages";
+import { ApplyLaunchPad } from "./pages/applyLaunchpad";
+import { Collection } from "./pages/collection/[slug]";
+import { Sale, Auction } from "./pages/explore";
+import { Launches } from "./pages/launches";
+import { Token } from "./pages/launchpad";
+import { User } from "./pages/user/[pubkey]";
 
 function App() {
   // @ts-ignore
@@ -49,36 +45,6 @@ function App() {
             <Toaster />
             <Router>
               <Routes>
-                {/* <Route path="/faq">
-                <FAQ />
-              </Route>
-              <Route path="/collection/:slug/activity">
-                <CollectionActivity />
-              </Route>
-              <Route path="/collection/:slug/edit">
-                <EditCollection />
-              </Route>
-              <Route path="/collection/:slug">
-                <Collection />
-              </Route>
-              <Route path="/t/:pubkey">
-                <Token />
-              </Route>
-              <Route path="/user/:pubkey">
-                <User />
-              </Route>
-              <Route path="/privacy">
-                <Privacy />
-              </Route>
-              <Route path="/stake">
-                <Stake />
-              </Route>
-              <Route path="/submissions/:id">
-                <SubmissionsUpsert />
-              </Route>
-              <Route path="/submissions">
-                <Submissions />
-              </Route>  */}
                 <Route path="/" element={<Index />} />
                 <Route path="/explore/sale" element={<Sale />} />
                 <Route path="/explore/auction" element={<Auction />} />
@@ -100,9 +66,12 @@ function App() {
   );
 }
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

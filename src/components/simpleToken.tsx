@@ -113,14 +113,8 @@ export default function Item(
   const [openSaleModal, setOpenSaleModal] = useState<boolean>(false);
   const [openAuctionModal, setOpenAuctionModal] = useState<boolean>(false);
   const [price, setPrice] = useState<number>(0);
-  const [endTime, setEndTime] = useState<number>(0);
-
   const [endDate, setEndDate] = useState<Date | null>(null);
-
-  const handleValueChange = (newValue: any) => {
-    console.log("newValue:", newValue);
-    setEndDate(newValue);
-  };
+  const [dateOpen, setDateOpen] = useState<boolean>(false);
 
   const handleChange = (e: any) => {
     setPrice(e.target.value);
@@ -153,6 +147,32 @@ export default function Item(
           contract,
           tokenId,
           ethers.utils.parseEther(price.toString())
+        );
+      });
+  };
+
+  const handleAuction = async (
+    contract: string | undefined,
+    tokenId: string | undefined,
+    startingBid: number,
+    endDate: Date | null
+  ) => {
+    if (!contract || !tokenId) return;
+    let endTime = 0;
+    if (endDate) endTime = Math.floor(endDate.getTime() / 1000);
+    else endTime = Math.floor(Date.now() / 1000) + 432000; // add 5 days
+    if (!nftContract) return;
+    setPrice(0);
+    setOpenAuctionModal(false);
+
+    await nftContract
+      .approve(MarketplaceAddress, tokenId)
+      .then(async (tx: any) => {
+        await createAuction(
+          contract,
+          tokenId,
+          ethers.utils.parseEther(startingBid.toString()),
+          endTime
         );
       });
   };
@@ -300,7 +320,7 @@ export default function Item(
           </div>
         </div>
       ) : openAuctionModal ? (
-        <div className="main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster background: rgba(0,0,0,.7)">
+        <div className="main-modal fixed w-full h-500 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster background: rgba(0,0,0,.7)">
           <div className="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
             <div className="modal-content py-4 text-left px-6 dark:bg-zinc-800  dark:purple-border-hover gray-border-hover">
               {/* <!--Title--> */}
@@ -337,23 +357,29 @@ export default function Item(
                     onChange={handleChange}
                   />
                 </div>
-                <div className="relative mb-4 ">
-                  <div className="relative mb-4 ">
-                    <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute z-[300]">
-                      Starting Price
-                    </p>
-                    <Datepicker show={false} setShow={handleValueChange} />
-                  </div>
+                <div
+                  className="relative mb-4 "
+                  onClick={() => setDateOpen(true)}
+                >
+                  <p className="rounded-md dark:bg-[linear-gradient(180deg,#27272a,#27272a)] bg-[linear-gradient(180deg,#f3f4f6,white)] pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 dark:text-white absolute z-[300]">
+                    Starting Price
+                  </p>
+                  <Datepicker
+                    show={dateOpen}
+                    setShow={setDateOpen}
+                    onChange={(e) => setEndDate(e)}
+                  />
                 </div>
               </div>
               {/* <!--Footer--> */}
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() =>
-                    handleSale(
-                      props.collectionId ?? "",
-                      props.mintId ?? "1",
-                      price
+                    handleAuction(
+                      props.collectionId,
+                      props.mintId,
+                      price,
+                      endDate
                     )
                   }
                   className="focus:outline-none px-4 w-[80px] bg-teal-500 p-3 mr-3 rounded-lg text-white hover:bg-teal-400"

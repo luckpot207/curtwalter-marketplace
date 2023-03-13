@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { BaseCollectionData, CategoryData } from "../../data/collection";
 import { UpcomingCollection } from "../../components/collection/UpcominCollection";
 import { BaseCollection } from "../../components/collection/BaseCollection";
+import { AuctionCard } from "../../components/AuctionCard";
 import { FiX, FiChevronDown, FiSearch } from "react-icons/fi";
 import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils/clsx";
@@ -24,7 +25,7 @@ import { Marketplace } from "../../typechain-types";
 import { decodeMetadataUri, getIpfsFileUri } from "../../utils/nft";
 
 export function Auction() {
-  const { allCollections } = useMarketplaceContract();
+  const { allAuctions } = useMarketplaceContract();
   const { isConnected } = useAccount();
 
   const url = window.location.pathname;
@@ -311,8 +312,8 @@ export function Auction() {
           </div>
         </div>
         <div className="mt-4 gap-y-12 gap-x-3 grid grid-cols-1 md:gap-y-4 sm:grid-cols-2 md:grid-cols-3 md:gap-x-3 lg:gap-y-8 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 lg:gap-x-3 mb-16">
-          {allCollections.map((item: any) => (
-            <BaseCollection key={item.id} collection={item} />
+          {allAuctions.map((item, idx) => (
+            <AuctionCard key={idx} auction={item} />
           ))}
           {collectionListNextPage && (
             <div

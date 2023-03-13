@@ -86,6 +86,7 @@ export function imageProxyUrl(
   url: string,
   type: "token" | "collection" | "listing"
 ) {
+  console.log(url);
   if (url.startsWith("https://assets.alpha.art/opt/")) {
     return url;
   }

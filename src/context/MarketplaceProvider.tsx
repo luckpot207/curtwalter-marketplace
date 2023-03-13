@@ -170,16 +170,29 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
     if (!!marketplaceContract) {
       const newAllCollections = await marketplaceContract.getCollections();
       setAllCollections(newAllCollections);
+      console.log("MarketplaceProvider");
+
       const newAllSales = await marketplaceContract.getSales();
       setAllSales(newAllSales);
+
       const newAllAuctions = await marketplaceContract.getAuctions();
       setAllAuctions(newAllAuctions);
 
-      if (newAllSales.length > 0) {
-        const countsByNftContractAddr = allSales.reduce<Record<string, number>>(
-          (acc, sale) => {
+      console.log(">>>>>>>>>>>>>>>>>", newAllSales);
+
+      // const contractAddresses = allSales.filter((item1) => {
+      //   return allSales.every((item2) => {
+      //     return item1.contractAddress !== item2.contractAddress;
+      //   });
+      // });
+
+      type CountsByNftContractAddr = Record<string, number>;
+
+      const countsByNftContractAddr: CountsByNftContractAddr =
+        newAllSales.reduce<CountsByNftContractAddr>(
+          (acc: CountsByNftContractAddr, sale) => {
             if (sale.contractAddress in acc) {
-              acc[sale.contractAddress]++;
+              acc[sale.contractAddress] += 1;
             } else {
               acc[sale.contractAddress] = 1;
             }
@@ -187,25 +200,27 @@ export const MarketplaceProvider = ({ children }: { children: ReactNode }) => {
           },
           {}
         );
-        // create collection array from the countsByNftContractAddr object
-        const collections: CollectionV2[] = await Promise.all(
-          Object.entries(countsByNftContractAddr).map(async ([key, value]) => {
-            const sale = allSales.filter((sale) => sale.contractAddress == key);
-            const obj: CollectionV2 = {
-              id: key,
-              slug: key,
-              title: "",
-              thumbnail: "",
-              totalItems: 5000,
-              listedCount: value,
-              floorPrice: ethers.utils.formatEther(sale[0].price),
-            } as CollectionV2;
-            return obj;
-            // console.log("collections", obj);
-          })
-        );
-        setAllCollectionsForSale(collections);
-      }
+
+      const collections: CollectionV2[] = await Promise.all(
+        Object.entries(countsByNftContractAddr).map(async ([key, value]) => {
+          const sale = newAllSales.filter(
+            (sale) => sale.contractAddress == key
+          );
+          const obj: CollectionV2 = {
+            id: key,
+            slug: key,
+            title: "",
+            thumbnail: "",
+            totalItems: 5000,
+            listedCount: value,
+            floorPrice: ethers.utils.formatEther(sale[0].price),
+          } as CollectionV2;
+          return obj;
+          // console.log("collections", obj);
+        })
+      );
+
+      setAllCollectionsForSale(collections);
     }
   }, [marketplaceContract, isConnected]);
 
